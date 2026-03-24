@@ -1,0 +1,56 @@
+
+services:
+  # ----------------------------------------
+  # 1. Database Service 
+  # ----------------------------------------
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: assignment_db
+    restart: always
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=SuperStrongPass123! # password
+    ports:
+      - "1433:1433" 
+    volumes:
+      - mssql_data:/var/opt/mssql
+
+# db for first init
+  db-init:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: db_initializer
+    depends_on:
+      - db
+    volumes:
+      - ./setup.sql:/setup.sql
+      - ./entrypoint.sh:/entrypoint.sh
+    # สั่งให้รันสคริปต์เช็คการเชื่อมต่อ
+    entrypoint: /bin/bash ./entrypoint.sh
+
+  # ----------------------------------------
+  # 2. Backend Service (Python Flask)
+  # ----------------------------------------
+  backend:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: assignment_backend
+    restart: always
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_APP=app.py
+      - FLASK_ENV=development
+      - DB_HOST=db
+      - DB_USER=sa
+      - DB_PASSWORD=SuperStrongPass123! # ต้องตรงกับข้างบน
+      - DB_PORT=1433
+      - DB_NAME=assignment_system 
+    depends_on:
+      - db
+      - db-init
+    volumes:
+      - ./backend:/app
+
+volumes:
+  mssql_data:

@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment Hub</title>
+    <link rel="stylesheet" href="src/style.css">
+</head>
+<body>
+    <div id="app" class="app-container">
+        <!-- Login Page -->
+        <section id="login-page" class="login-container page active">
+            <div class="login-card">
+                <div class="login-logo">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M8 7h6"/><path d="M8 11h8"/></svg>
+                </div>
+                <h1>Assignment Hub</h1>
+                <p class="mb-2">ระบบจัดการการส่งงาน เพื่อประสิทธิภาพการเรียนรู้</p>
+                
+                <div class="form-group mt-4">
+                    <label>ชื่อผู้ใช้งาน / อีเมล</label>
+                    <input type="text" class="input-soft" placeholder="example@university.ac.th">
+                </div>
+                
+                <div class="form-group">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <label style="margin-bottom: 0;">รหัสผ่าน</label>
+                        <a href="#" class="label-sm text-secondary" style="text-decoration: none;">ลืมรหัสผ่าน?</a>
+                    </div>
+                    <input type="password" class="input-soft" placeholder="••••••••">
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 24px;">
+                    <button class="btn-social" onclick="loginAs('student')" style="flex-direction: column; padding: 24px; height: auto; gap: 12px;">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+                        <span class="label-sm">นักศึกษา</span>
+                    </button>
+                    <button class="btn-primary" onclick="loginAs('teacher')" style="flex-direction: column; padding: 24px; height: auto; gap: 12px; background: var(--surface-container-high); color: var(--primary); box-shadow: none;">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                        <span class="label-sm">อาจารย์</span>
+                    </button>
+                </div>
+                
+                <p style="margin-top: 24px; font-size: 0.75rem; opacity: 0.6;">หรือเข้าสู่ระบบด้วยบัญชีกลาง</p>
+                
+                <div class="social-login">
+                    <button class="btn-social">
+                        <img src="https://www.google.com/favicon.ico" width="16" height="16" alt="Google">
+                        Google
+                    </button>
+                    <button class="btn-social">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/></svg>
+                        SSO บัญชีมหาลัย
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main App Layout (Dashboard, Tracker, Creation) -->
+        <div id="main-layout" class="hidden">
+            <nav class="navbar">
+                <div class="nav-brand">Assignment Hub</div>
+                <div class="nav-links">
+                    <a href="#" id="nav-dashboard" class="nav-link active" onclick="navigateTo('dashboard')">แดชบอร์ด</a>
+                    <a href="#" id="nav-creation" class="nav-link" onclick="navigateTo('creation')">สร้างงานใหม่</a>
+                    <a href="#" id="nav-tracker" class="nav-link" onclick="navigateTo('tracker')">ติดตามงาน</a>
+                    <a href="#" id="nav-help" class="nav-link">ช่วยเหลือ</a>
+                </div>
+                <div class="user-profile">
+                    <button class="close-btn" style="background: transparent; position: relative;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+                        <span style="position: absolute; top: 8px; right: 8px; width: 8px; height: 8px; background: var(--error); border-radius: 50%; border: 2px solid white;"></span>
+                    </button>
+                    <span class="label-sm">สมชาย ใจดี (อาจารย์)</span>
+                    <img src="https://picsum.photos/seed/man/100/100" class="avatar" alt="User">
+                    <button class="close-btn" onclick="navigateTo('login')">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+                    </button>
+                </div>
+            </nav>
+
+            <!-- Dashboard Page -->
+            <section id="dashboard-page" class="page">
+                <div class="dashboard-header" style="display: flex; justify-content: space-between; align-items: flex-end;">
+                    <div>
+                        <h1>สวัสดี, สมชาย</h1>
+                        <p>มาเริ่มจัดการงานวิชาการของคุณในวันนี้กันเถอะ</p>
+                    </div>
+                    <div class="label-sm" style="opacity: 0.6;">
+                        วันศุกร์ที่ 27 มีนาคม 2569
+                    </div>
+                </div>
+                
+                <div class="dashboard-grid">
+                    <div class="assignment-list">
+                        <div class="section-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                            <h2>รายการงานของฉัน</h2>
+                            <span class="text-secondary label-sm">4 งานคงค้าง</span>
+                        </div>
+                        
+                        <div class="assignment-card" onclick="openSubmitModal('Lab 4')">
+                            <div class="card-info">
+                                <span class="status-chip status-todo">งานที่ต้องทำ</span>
+                                <h3>การวิเคราะห์อัลกอริทึมพื้นฐาน (Lab 4)</h3>
+                                <p>วิชา: Computer Science 101 • ผู้สอน: ดร. วิภาวี</p>
+                            </div>
+                            <div class="time-badge">
+                                <span class="label">เหลือเวลาอีก</span>
+                                <span class="value">02:14:45</span>
+                            </div>
+                        </div>
+
+                        <div class="assignment-card" onclick="openSubmitModal('Assignment 2')">
+                            <div class="card-info">
+                                <span class="status-chip status-todo">งานที่ต้องทำ</span>
+                                <h3>ออกแบบฐานข้อมูลเชิงสัมพันธ์</h3>
+                                <p>วิชา: Database Systems • ผู้สอน: อ. สมเกียรติ</p>
+                            </div>
+                            <div class="time-badge">
+                                <span class="label">กำหนดส่ง</span>
+                                <span class="value">พรุ่งนี้, 18:00</span>
+                            </div>
+                        </div>
+
+                        <div class="assignment-card submitted">
+                            <div class="card-info">
+                                <span class="status-chip status-submitted">ส่งแล้ว</span>
+                                <h3>รายงานความก้าวหน้าโครงงาน</h3>
+                                <p>วิชา: Senior Project • ผู้สอน: คณะกรรมการ</p>
+                            </div>
+                            <div class="card-action">
+                                <span class="label-sm" style="display: flex; align-items: center; gap: 8px;">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--tertiary-fixed)"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                                    ตรวจสอบแล้ว
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="submit-modal" class="sidebar-card">
+                        <div class="sidebar-header">
+                            <h2>หน้าส่งงาน</h2>
+                            <button class="close-btn" onclick="closeSubmitModal()">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                            </button>
+                        </div>
+                        
+                        <div class="assignment-card" style="background: white; margin-bottom: 24px; cursor: default;">
+                            <div class="card-info">
+                                <h3>โครงสร้างข้อมูลแบบต้นไม้ (Assignment 3)</h3>
+                                <p>กรุณาเขียนโค้ดภาษา Java เพื่อแสดงการทำงานของ Binary Search Tree และจัดทำรายงานสรุปในรูปแบบ PDF</p>
+                                <div class="mt-4">
+                                    <p class="label-sm mb-2">เอกสารประกอบ</p>
+                                    <div class="status-chip" style="background: var(--surface-container-high); display: flex; align-items: center; gap: 8px; width: fit-content;">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+                                        Instruction_A3.pdf
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="time-badge" style="background: var(--surface-container-high); padding: 24px; margin-bottom: 24px;">
+                            <span class="label">ระยะเวลาที่เหลือ</span>
+                            <span class="value" style="font-size: 2rem;">02:14:45</span>
+                        </div>
+
+                        <div class="upload-area" onclick="document.getElementById('assignment-file').click()">
+                            <input type="file" id="assignment-file" class="hidden" onchange="handleFileSelect(this, 'assignment-file-name')">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--on-surface-variant); margin-bottom: 12px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+                            <p id="assignment-file-name">ลากไฟล์มาวางที่นี่ หรือคลิกเพื่อเลือกไฟล์</p>
+                            <span class="label-sm" style="opacity: 0.6;">รองรับไฟล์ PDF, Word, Zip (สูงสุด 50MB)</span>
+                        </div>
+
+                        <button class="btn-primary">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polyline points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                            ยืนยันการส่งงาน
+                        </button>
+                        <p style="text-align: center; font-size: 0.625rem; margin-top: 12px;">การส่งงานจะได้รับการประทับเวลาอย่างเป็นทางการ</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tracker Page -->
+            <section id="tracker-page" class="page">
+                <div class="dashboard-header" style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 48px;">
+                    <div>
+                        <h1>Submission Tracker</h1>
+                        <p>CS302: ระบบฐานข้อมูลเบื้องต้น - โปรเจกต์รอบที่ 1</p>
+                    </div>
+                    <div style="width: 320px;">
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <input type="text" class="input-soft" placeholder="ค้นหารหัสนักศึกษา หรือชื่อ...">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th class="label-sm">รหัสนักศึกษา</th>
+                                <th class="label-sm">ชื่อ-นามสกุล</th>
+                                <th class="label-sm">เวลาที่ส่ง</th>
+                                <th class="label-sm">สถานะ</th>
+                                <th class="label-sm">ไฟล์งาน</th>
+                                <th class="label-sm">คะแนน (เต็ม 20)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>64010021</td>
+                                <td style="display: flex; align-items: center; gap: 12px;">
+                                    <div style="width: 32px; height: 32px; border-radius: 50%; background: #e0e7ff; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; color: var(--secondary);">PK</div>
+                                    ปิยบุตร เก่งกาจ
+                                </td>
+                                <td>12 ก.ค. 2567, 23:45</td>
+                                <td><span class="status-chip status-submitted" style="font-size: 0.625rem;">ตรงเวลา</span></td>
+                                <td style="color: var(--secondary);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 4px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg> CS302_HW1.zip</td>
+                                <td><input type="text" class="input-soft" style="width: 60px; padding: 8px; text-align: center;" value="0"></td>
+                            </tr>
+                            <tr>
+                                <td>64010045</td>
+                                <td style="display: flex; align-items: center; gap: 12px;">
+                                    <div style="width: 32px; height: 32px; border-radius: 50%; background: #fef3c7; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; color: #b45309;">NT</div>
+                                    นวพร ตั้งใจเรียน
+                                </td>
+                                <td>13 ก.ค. 2567, 08:12</td>
+                                <td><span class="status-chip status-late" style="font-size: 0.625rem;">ส่งช้า (8 ชม.)</span></td>
+                                <td style="color: var(--secondary);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 4px;"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg> DB_Draft_Final.pdf</td>
+                                <td><input type="text" class="input-soft" style="width: 60px; padding: 8px; text-align: center;" value="18"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div style="display: flex; justify-content: flex-end; gap: 16px; margin-top: 32px;">
+                    <button class="btn-social" style="width: auto; padding: 12px 32px;">ยกเลิก</button>
+                    <button class="btn-primary" style="width: auto; padding: 12px 48px;">บันทึกคะแนนทั้งหมด</button>
+                </div>
+            </section>
+
+            <!-- Creation Page -->
+            <section id="creation-page" class="page">
+                <div class="dashboard-header">
+                    <span class="status-chip status-todo mb-2">SUBJECT OVERVIEW</span>
+                    <h1>CS302 การออกแบบส่วนต่อประสานกับผู้ใช้ (UI Design)</h1>
+                    <p>ยินดีต้อนรับกลับ อาจารย์สมชาย จัดการแผนการสอนและงานที่มอบหมายของนิสิตได้ในหน้านี้</p>
+                </div>
+                
+                <div class="dashboard-grid">
+                    <div class="sidebar-card" style="background: white; position: relative; top: 0;">
+                        <div class="sidebar-header">
+                            <h2>สร้างงานใหม่</h2>
+                        </div>
+                        <div class="form-group">
+                            <label>หัวข้องาน</label>
+                            <input type="text" class="input-soft" placeholder="ระบุชื่อผลงานที่ต้องการมอบหมาย...">
+                        </div>
+                        <div class="form-group">
+                            <label>รายละเอียดงาน</label>
+                            <textarea class="input-soft" style="height: 120px; resize: none;" placeholder="อธิบายสิ่งที่นิสิตต้องทำและเงื่อนไขการส่ง..."></textarea>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                            <div class="form-group">
+                                <label>คะแนนเต็ม</label>
+                                <input type="number" class="input-soft" value="10">
+                            </div>
+                            <div class="form-group">
+                                <label>กำหนดส่ง</label>
+                                <input type="date" class="input-soft">
+                            </div>
+                        </div>
+                        <div class="upload-area" style="padding: 24px;" onclick="document.getElementById('new-assignment-file').click()">
+                            <input type="file" id="new-assignment-file" class="hidden" onchange="handleFileSelect(this, 'new-assignment-file-name')">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 8px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+                            <p id="new-assignment-file-name" style="font-size: 0.75rem;">ลากไฟล์มาวางหรือคลิกเพื่อเลือกไฟล์</p>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                            <button class="btn-social">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                                ดูตัวอย่าง
+                            </button>
+                            <button class="btn-primary">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                                สร้างงานใหม่
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="assignment-list">
+                        <div style="background: url('https://picsum.photos/seed/design/800/400') center/cover; height: 240px; border-radius: 24px; position: relative; padding: 32px; display: flex; flex-direction: column; justify-content: flex-end; color: white;">
+                            <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(to top, rgba(0,0,0,0.7), transparent); border-radius: 24px;"></div>
+                            <div style="position: relative; z-index: 1;">
+                                <h2 style="font-size: 2rem;">Visual Design Essentials</h2>
+                                <p style="color: rgba(255,255,255,0.8);">สัปดาห์ที่ 8: สีและทฤษฎีความเปรียบต่างในอินเตอร์เฟส</p>
+                            </div>
+                        </div>
+
+                        <div class="section-header" style="display: flex; justify-content: space-between; align-items: center; margin-top: 24px;">
+                            <h2>รายละเอียดงานที่เปิดอยู่</h2>
+                            <a href="#" class="text-secondary label-sm">ดูทั้งหมด</a>
+                        </div>
+
+                        <div class="assignment-card" style="background: white;">
+                            <div style="display: flex; gap: 20px; align-items: center;">
+                                <div style="width: 48px; height: 48px; border-radius: 12px; background: var(--surface-container-low); display: flex; align-items: center; justify-content: center;">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+                                </div>
+                                <div>
+                                    <div style="display: flex; align-items: center; gap: 12px;">
+                                        <h3>Assignment 03: Design System & Color Palette</h3>
+                                        <span class="status-chip status-submitted" style="font-size: 0.625rem;">SUBMITTED (18/24)</span>
+                                    </div>
+                                    <p>ให้นิสิตออกแบบ Design System ขั้นพื้นฐานสำหรับแอปพลิเคชัน Mobile Banking...</p>
+                                    <div style="display: flex; gap: 16px; margin-top: 12px;">
+                                        <span class="label-sm" style="display: flex; align-items: center; gap: 4px; opacity: 0.6;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> กำหนดส่ง: 24 ต.ค. 2567</span>
+                                        <span class="label-sm" style="display: flex; align-items: center; gap: 4px; opacity: 0.6;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> 15 คะแนน</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <footer class="footer">
+                <div>Assignment Hub © 2024 ระบบจัดการการส่งงาน. สงวนลิขสิทธิ์ตามกฎหมาย.</div>
+                <div class="footer-links">
+                    <button class="btn-social" style="padding: 4px 12px; font-size: 0.625rem;">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+                        โหมดกลางคืน
+                    </button>
+                    <a href="#" class="nav-link">ข้อมูลสถาบัน</a>
+                    <a href="#" class="nav-link">นโยบายความเป็นส่วนตัว</a>
+                    <a href="#" class="nav-link">ติดต่อสอบถาม</a>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <script src="/src/main.js"></script>
+</body>
+</html>

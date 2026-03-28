@@ -4,10 +4,10 @@ import os
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
-# อนุญาต CORS เพื่อให้หน้าเว็บ (Port ต่างๆ) สามารถส่งข้อมูลมาที่ Python ได้
+
 CORS(app)
 
-# ตั้งค่าโฟลเดอร์เก็บไฟล์
+# ตั้งที้เก็บไฟล์
 UPLOAD_FOLDER = 'uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -18,18 +18,18 @@ def home():
 
 @app.route('/upload', methods=['POST'])
 def upload():
-    # 1. เช็คว่ามีไฟล์ส่งมาใน Request หรือไม่
+    # เช็คว่ามีไฟล์มีมั้ย
     if 'file' not in request.files:
         return jsonify({"error": "No file part"}), 400
     
     file = request.files['file']
 
-    # 2. เช็คว่าชื่อไฟล์ว่างหรือไม่ (กรณีไม่ได้เลือกไฟล์)
+    # 2. เช็คว่าชื่อไฟล์ว่างหรือไม่ 
     if file.filename == '':
         return jsonify({"error": "No selected file"}), 400
 
     if file:
-        # 3. ทำให้ชื่อไฟล์ปลอดภัย (ลบอักขระพิเศษที่อาจเป็นอันตราย)
+        # 3. ทำให้ชื่อไฟล์ปลอดภัย 
         filename = secure_filename(file.filename)
         
         # 4. บันทึกไฟล์
@@ -43,5 +43,5 @@ def upload():
         }), 200
 
 if __name__ == '__main__':
-    # รันเซิร์ฟเวอร์
+  
     app.run(debug=True, port=5000)

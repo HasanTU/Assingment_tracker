@@ -1,6 +1,17 @@
 from flask import Flask, jsonify
+from database import SessionLocal  # import session factory
+
+from controllers.user_controller import user_bp
+from controllers.assignment_controller import assignment_bp
+
+
 
 app = Flask(__name__)
+db = SessionLocal()
+
+
+app.register_blueprint(user_bp)
+app.register_blueprint(assignment_bp)
 
 # This is a route. It listens for GET requests at /api/health
 @app.route('/api/health', methods=['GET'])

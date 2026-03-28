@@ -9,4 +9,4 @@ class Course(Base):
 
     course_id = Column(Integer, primary_key=True, autoincrement=True)
     course_name = Column(String(255), nullable=False)
-    teacher_id = Column(Integer, ForeignKey("users.user_id"), nullable=False)
+    teacher_id = Column(Integer, ForeignKey("users.user_id"), nullable=True)

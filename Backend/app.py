@@ -2,25 +2,48 @@ from database import SessionLocal  # import session factory
 
 from controllers.user_controller import user_bp
 from controllers.assignment_controller import assignment_bp
+from controllers.upload_file_controller import upload_file_bp
 
-
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, make_response
 from flask_cors import CORS
 import os
 from werkzeug.utils import secure_filename
 
+from config import UPLOAD_FOLDER
 
 app = Flask(__name__)
 db = SessionLocal()
 
+CORS(
+    app,
+    resources={
+    r"/api/*":
+    {
+
+        "origins": ["http://127.0.0.1:5500", "http://localhost:5500"],
+        "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        "allow_headers": ["Content-Type", "Authorization"],
+        "supports_credentials": True
+    }
+    }
+)
+
 
 app.register_blueprint(user_bp)
 app.register_blueprint(assignment_bp)
+app.register_blueprint(upload_file_bp)
 
-CORS(app)
+@app.before_request
+def handle_preflight():
+    if request.method == "OPTIONS":
+        response = make_response()
+        response.headers.add("Access-Control-Allow-Origin", "http://127.0.0.1:5500")
+        response.headers.add("Access-Control-Allow-Headers", "Content-Type,Authorization")
+        response.headers.add("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS")
+        response.headers.add("Access-Control-Allow-Credentials", "true")
+        return response, 200
 
 # ตั้งที้เก็บไฟล์
-UPLOAD_FOLDER = 'uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
@@ -28,31 +51,8 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 def home():
     return jsonify({"status": "online", "message": "Assignment Hub Backend is running"})
 
-@app.route('/upload', methods=['POST'])
-def upload():
-    # เช็คว่ามีไฟล์มีมั้ย
-    if 'file' not in request.files:
-        return jsonify({"error": "No file part"}), 400
-    
-    file = request.files['file']
+# ย้าย Code Upload ไป upload_file_controller
 
-    # 2. เช็คว่าชื่อไฟล์ว่างหรือไม่ 
-    if file.filename == '':
-        return jsonify({"error": "No selected file"}), 400
-
-    if file:
-        # 3. ทำให้ชื่อไฟล์ปลอดภัย 
-        filename = secure_filename(file.filename)
-        
-        # 4. บันทึกไฟล์
-        file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        file.save(file_path)
-        
-        return jsonify({
-            "message": "Upload successful!",
-            "filename": filename,
-            "path": file_path
-        }), 200
 
 if __name__ == '__main__':
   

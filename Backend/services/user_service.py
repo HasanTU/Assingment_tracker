@@ -11,6 +11,7 @@ from config import TU_API_URL, TU_API_APPKEY, JWT_SECRET_KEY, JWT_ALGORITHM, JWT
 class UserService:
     def __init__(self, db_session):
         self.user_repo = UserRepository(db_session)
+        
 
     def login_with_tuAPI(self, username: str, password: str):
        
@@ -49,6 +50,18 @@ class UserService:
         return token
     
 
+    def login_normal(self, username: str, password: str):
+        db_user = self.user_repo.get_by_username(username)
+
+        if db_user is None: raise ValueError("Wrong Username!")
+        if db_user.password != password: raise ValueError("Wrong Password!")
+
+        user_role = db_user.role
+        
+
+        token = self._create_jwt(db_user.user_id, username, user_role)
+        return token
+
     def _create_jwt(self, user_id, username, role):
         expire = datetime.now(timezone.utc) + timedelta(minutes=JWT_EXPIRE_MINUTES)
         payload = {
@@ -62,3 +75,7 @@ class UserService:
     
     def get_user_by_username(self, username:str):
         return self.user_repo.get_by_username(username)
+
+    def get_user_id_by_username(self, username:str):
+        user = self.get_user_by_username(username)
+        return user if user is None else user.user_id

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student - Assignment Hub</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">Assignment Hub</div>
+        <div class="user-profile">
+            <span class="label-sm">นิสิต ตั้งใจเรียน</span>
+            <img src="https://picsum.photos/seed/student/100/100" class="avatar">
+            <a href="index.html" class="close-btn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+            </a>
+        </div>
+    </nav>
+
+    <main class="page active">
+        <div class="dashboard-header">
+            <h1>สวัสดี, นิสิต</h1>
+            <p>ตรวจสอบรายการงานและอัปโหลดไฟล์งานของคุณได้ที่นี่</p>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="assignment-list">
+                <div class="assignment-card">
+                    <div class="card-info">
+                        <span class="status-chip status-todo">งานที่ต้องทำ</span>
+                        <h3>Lab 04: การวิเคราะห์อัลกอริทึม</h3>
+                        <p>Computer Science 101 • ดร. วิภาวี</p>
+                    </div>
+                    <div class="time-badge">
+                        <span class="label">เหลือเวลา</span>
+                        <span class="value">02:14:45</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-card">
+                <div class="sidebar-header"><h2>หน้าส่งงาน</h2></div>
+                <div class="upload-area">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-bottom: 12px; opacity: 0.5;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+                    <p>ลากไฟล์มาวางที่นี่</p>
+                    <span class="label-sm" style="opacity: 0.6;">รองรับไฟล์ PDF, Word, Zip</span>
+                </div>
+                <button class="btn-primary">ยืนยันการส่งงาน</button>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

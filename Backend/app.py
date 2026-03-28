@@ -1,15 +1,21 @@
-from flask import Flask, jsonify
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+import os
 
-app = Flask(__name__)
+app = Flask(__name__)   
+CORS(app)              
 
-# This is a route. It listens for GET requests at /api/health
-@app.route('/api/health', methods=['GET'])
-def health_check():
-    return jsonify({
-        "status": "success", 
-        "message": "Assignment System Backend is running!"
-    }), 200
+UPLOAD_FOLDER = 'uploads'
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-if __name__ == '__main__':
-    # debug=True automatically restarts the server when you change the code
-    app.run(debug=True, port=5000)
+@app.route('/')
+def home():
+    return "Backend running"
+
+@app.route('/upload', methods=['POST'])
+def upload():
+    file = request.files['file']
+    file.save('uploads/' + file.filename)
+    return {"message": "uploaded"}
+
+app.run(debug=True)

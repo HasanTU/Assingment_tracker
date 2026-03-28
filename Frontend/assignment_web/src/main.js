@@ -6,7 +6,7 @@ function navigateTo(pageId) {
     const pages = ['login', 'dashboard', 'tracker', 'creation'];
     const loginPage = document.getElementById('login-page');
     const mainLayout = document.getElementById('main-layout');
-    
+
     // Hide all pages
     pages.forEach(p => {
         const page = document.getElementById(`${p}-page`);
@@ -23,10 +23,10 @@ function navigateTo(pageId) {
         loginPage.classList.remove('active');
         loginPage.classList.add('hidden');
         mainLayout.classList.remove('hidden');
-        
+
         const targetPage = document.getElementById(`${pageId}-page`);
         if (targetPage) targetPage.classList.add('active');
-        
+
         // Update nav links
         const navLinks = document.querySelectorAll('.nav-link');
         navLinks.forEach(link => {
@@ -37,13 +37,13 @@ function navigateTo(pageId) {
         });
     }
 
-    // Scroll to top
     window.scrollTo(0, 0);
 }
 
 // Role-based Login
 function loginAs(role) {
     currentUserRole = role;
+
     const navDashboard = document.getElementById('nav-dashboard');
     const navCreation = document.getElementById('nav-creation');
     const navTracker = document.getElementById('nav-tracker');
@@ -52,44 +52,43 @@ function loginAs(role) {
     const dashboardTitle = document.querySelector('#dashboard-page h1');
 
     if (role === 'student') {
-        // Student: Only Dashboard (Submission)
         navDashboard.classList.remove('hidden');
         navCreation.classList.add('hidden');
         navTracker.classList.add('hidden');
         navHelp.classList.add('hidden');
-        userName.innerText = 'ปิยบุตร เก่งกาจ (นักศึกษา)';
-        dashboardTitle.innerText = 'สวัสดี, ปิยบุตร';
+
+        if (userName) userName.innerText = 'ปิยบุตร เก่งกาจ (นักศึกษา)';
+        if (dashboardTitle) dashboardTitle.innerText = 'สวัสดี, ปิยบุตร';
+
         navigateTo('dashboard');
+
     } else if (role === 'teacher') {
-        // Teacher: Creation and Tracker
         navDashboard.classList.add('hidden');
         navCreation.classList.remove('hidden');
         navTracker.classList.remove('hidden');
         navHelp.classList.add('hidden');
-        userName.innerText = 'สมชาย ใจดี (อาจารย์)';
+
+        if (userName) userName.innerText = 'สมชาย ใจดี (อาจารย์)';
+
         navigateTo('creation');
     }
 }
 
 // Modal Handling
-function openSubmitModal(assignmentName) {
+function openSubmitModal() {
     const modal = document.getElementById('submit-modal');
-    if (modal) {
-        modal.classList.remove('hidden');
-        // You could update modal content here based on assignmentName
-    }
+    if (modal) modal.classList.remove('hidden');
 }
 
 function closeSubmitModal() {
     const modal = document.getElementById('submit-modal');
-    if (modal) {
-        modal.classList.add('hidden');
-    }
+    if (modal) modal.classList.add('hidden');
 }
 
-// File Upload Handling
+// File Upload Handling (UI)
 function handleFileSelect(input, displayId) {
     const displayElement = document.getElementById(displayId);
+
     if (input.files && input.files.length > 0) {
         const fileName = input.files[0].name;
         displayElement.innerText = `เลือกไฟล์แล้ว: ${fileName}`;
@@ -102,12 +101,38 @@ function handleFileSelect(input, displayId) {
     }
 }
 
+// ✅ FIXED Upload File (สำคัญ)
+function uploadFile() {
+    const fileInput = document.getElementById("assignment-file");
+    const file = fileInput.files[0];
+
+    if (!file) {
+        alert("กรุณาเลือกไฟล์ก่อน");
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    fetch("http://127.0.0.1:5000/upload", {
+        method: "POST",
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        console.log("Upload success:", data);
+        alert("อัปโหลดสำเร็จ");
+    })
+    .catch(err => {
+        console.error(err);
+        alert("อัปโหลดล้มเหลว");
+    });
+}
+
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
-    // Start at login
     navigateTo('login');
-    
-    // Add some interactivity to buttons that don't have it yet
+
     const buttons = document.querySelectorAll('button:not([onclick])');
     buttons.forEach(btn => {
         btn.addEventListener('click', () => {
@@ -116,9 +141,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// Expose functions to global scope for inline onclick
+// Expose to global
 window.navigateTo = navigateTo;
 window.loginAs = loginAs;
 window.openSubmitModal = openSubmitModal;
 window.closeSubmitModal = closeSubmitModal;
 window.handleFileSelect = handleFileSelect;
+window.uploadFile = uploadFile;

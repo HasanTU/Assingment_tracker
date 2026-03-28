@@ -10,11 +10,11 @@
     <nav class="navbar">
         <div class="nav-brand">Assignment Hub</div>
         <div class="user-profile">
-            <span class="label-sm">อ.สมชาย ใจดี</span>
+            <span class="label-sm">อ.สมชาย ใจดี (อาจารย์)</span>
             <img src="https://picsum.photos/seed/man/100/100" class="avatar">
-            <a href="index.html" class="close-btn">
+            <button class="close-btn" onclick="logout()">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
-            </a>
+            </button>
         </div>
     </nav>
 
@@ -24,13 +24,17 @@
                 <div class="sidebar-header"><h2>สร้างงานใหม่</h2></div>
                 <div class="form-group">
                     <label>หัวข้องาน</label>
-                    <input type="text" class="input-soft" placeholder="ระบุชื่อผลงาน...">
+                    <input type="text" class="input-soft" placeholder="ชื่อวิชา/หัวข้อ...">
                 </div>
                 <div class="form-group">
                     <label>กำหนดส่ง</label>
                     <input type="date" class="input-soft">
                 </div>
-                <button class="btn-primary">ประกาศงานใหม่</button>
+                <div class="upload-area" onclick="document.getElementById('teacher-file').click()">
+                    <input type="file" id="teacher-file" hidden onchange="handleFileSelect(this, 'teacher-file-name')">
+                    <p id="teacher-file-name">แนบไฟล์คำสั่ง (ถ้ามี)</p>
+                </div>
+                <button class="btn-primary" onclick="alert('สร้างงานเรียบร้อย!')">ประกาศงาน</button>
             </div>
 
             <div class="assignment-list">
@@ -40,19 +44,20 @@
                         <tr>
                             <th class="label-sm">รหัสนิสิต</th>
                             <th class="label-sm">สถานะ</th>
-                            <th class="label-sm">คะแนน (20)</th>
+                            <th class="label-sm">คะแนน</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <td>64010021</td>
-                            <td><span class="status-chip status-submitted">ตรงเวลา</span></td>
-                            <td><input type="number" class="input-soft" style="width: 80px;" value="18"></td>
+                            <td><span class="status-chip status-submitted">ส่งแล้ว</span></td>
+                            <td><input type="number" class="input-soft" style="width: 80px;" value="15"></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
     </main>
+    <script src="main.js"></script>
 </body>
 </html>

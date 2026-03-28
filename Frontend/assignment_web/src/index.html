@@ -20,24 +20,24 @@
                     <label>ชื่อผู้ใช้งาน / อีเมล</label>
                     <input type="text" class="input-soft" placeholder="example@university.ac.th">
                 </div>
-                
                 <div class="form-group">
                     <label>รหัสผ่าน</label>
                     <input type="password" class="input-soft" placeholder="••••••••">
                 </div>
                 
                 <div class="social-login">
-                    <a href="student.html" class="btn-social" style="text-decoration: none; flex-direction: column; padding: 20px; height: auto;">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
-                        <span class="label-sm">นักศึกษา</span>
-                    </a>
-                    <a href="teacher.html" class="btn-primary" style="text-decoration: none; flex-direction: column; padding: 20px; height: auto;">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-                        <span class="label-sm" style="color: white;">อาจารย์</span>
-                    </a>
+                    <button class="btn-social" onclick="window.location.href='student.html'" style="flex-direction: column; padding: 24px; height: auto;">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+                        <span class="label-sm">เข้าใช้งาน (นักศึกษา)</span>
+                    </button>
+                    <button class="btn-primary" onclick="window.location.href='teacher.html'" style="flex-direction: column; padding: 24px; height: auto;">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                        <span class="label-sm" style="color: white;">เข้าใช้งาน (อาจารย์)</span>
+                    </button>
                 </div>
             </div>
         </section>
     </div>
+    <script src="main.js"></script>
 </body>
 </html>

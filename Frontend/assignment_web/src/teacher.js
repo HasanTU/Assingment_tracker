@@ -1,6 +1,7 @@
 async function createAssignment() {
     const title = document.getElementById("input-title").value;
     const deadline = document.getElementById("input-deadline").value;
+    const course_name = document.getElementById("input-course-name").value
 
     if (!title || !deadline) {
         alert("กรอกข้อมูลให้ครบ");
@@ -15,6 +16,7 @@ async function createAssignment() {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
+                course_name: course_name,
                 title: title,
                 deadline: deadline,
                 description: ""

@@ -16,14 +16,12 @@ def create_assignment():
     role = g.user["role"]
 
     title = data.get("title")
-    course_id = data.get("course_id") or "4"
+    course_name = data.get("course_name")
     description = data.get("description") or ""
     deadline = data.get("deadline")
 
-
-    assignment_service.create_assignment(username, title, course_id, description, deadline)
+    assignment_service.create_assignment(username, title, course_name, description, deadline)
         
-    
     return jsonify({
         "status": "success",
         "message": "Assignment created successfully!"

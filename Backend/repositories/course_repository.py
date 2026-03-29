@@ -16,6 +16,9 @@ class CourseRepository:
         self.db.refresh(course)
         return course
     
+    def get_by_name(self, name1):
+        return self.db.query(Course).filter(Course.course_name.ilike(name1)).first()
+    
     def get_all_user_in_course_id(self, course_id):
         users = self.db.query(User).join(
             Enrollment, User.user_id == Enrollment.student_id

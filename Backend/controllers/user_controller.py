@@ -89,14 +89,18 @@ def logout():
     response.set_cookie("token", "", expires=0)
     return response
 
-@user_bp.route("/verify-role", methods=["GET"])
+@user_bp.route("/me", methods=["GET"])
 @role_required(UserRole.TEACHER, UserRole.STUDENT)
 def verify_role():
     username = g.user["username"]
     role = g.user["role"]
+    first_name = g.user["first_name"]
+    last_name = g.user["last_name"]
 
     return jsonify({
         "status": "authenticated",
         "username": username,
+        "first_name":first_name,
+        "last_name":last_name,
         "role": role.value
     }), 200

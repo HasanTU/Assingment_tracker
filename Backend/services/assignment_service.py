@@ -27,7 +27,7 @@ class AssignmentService:
     def get_assignments_by_role(self, user_id, role):
         if role == UserRole.TEACHER:
             # ดูงานที่ตัวเองสร้าง
-            return self.assignment_repo.get_all_by_user_id(user_id)
+            return self.assignment_repo.get_all_create_by_user_id(user_id)
         
         elif role == UserRole.STUDENT:
             # ดูงานที่ต้องทำ

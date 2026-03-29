@@ -44,6 +44,8 @@ def role_required(*roles):
                 g.user = {
                     "user_id": data.get("user_id"),
                     "username": data.get("username"),
+                    "first_name": data.get("first_name"),
+                    "last_name": data.get("last_name"),
                     "role": user_role
                 }
 

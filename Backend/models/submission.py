@@ -16,8 +16,8 @@ class Submission(Base):
     assignment_id = Column(Integer, ForeignKey("assignments.assignment_id"), nullable=False)
     student_id = Column(Integer, ForeignKey("users.user_id"), nullable=False)
 
-    file_path = Column(String(255), nullable=False)
+    file_path = Column(String(255), nullable=True)
 
-    submitted_at = Column(DateTime, nullable=False)
+    submitted_at = Column(DateTime, nullable=True)
 
     status = Column(SQLEnum(SubmissionStatus), nullable=False)

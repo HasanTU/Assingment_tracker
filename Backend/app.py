@@ -3,6 +3,7 @@ from database import SessionLocal  # import session factory
 from controllers.user_controller import user_bp
 from controllers.assignment_controller import assignment_bp
 from controllers.upload_file_controller import upload_file_bp
+from controllers.course_controller import course_bp
 
 from flask import Flask, request, jsonify, make_response
 from flask_cors import CORS
@@ -32,6 +33,7 @@ CORS(
 app.register_blueprint(user_bp)
 app.register_blueprint(assignment_bp)
 app.register_blueprint(upload_file_bp)
+app.register_blueprint(course_bp)
 
 @app.before_request
 def handle_preflight():

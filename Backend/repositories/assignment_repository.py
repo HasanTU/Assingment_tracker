@@ -16,7 +16,7 @@ class AssignmentRepository:
         self.db.refresh(assignment)
         return assignment
     
-    def get_all_by_user_id(self, user_id):
+    def get_all_create_by_user_id(self, user_id):
         return (
             self.db.query(Assignment)
             .filter(Assignment.created_by == user_id)

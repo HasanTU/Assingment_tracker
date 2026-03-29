@@ -20,9 +20,8 @@ def login():
     password = data.get("password")
 
     try:
-        token = user_service.login_with_tuAPI(username, password)
-
-        response = make_response(jsonify({"message": "login success"}))
+        token, role = user_service.login_with_tuAPI(username, password)
+        response = make_response(jsonify({"message": "login success", "role": role.value}))
 
         response.set_cookie(
             "token",
@@ -49,7 +48,7 @@ def loginTest():
         token = user_service.login_normal(username, password)
 
         response = make_response(jsonify({"message": "login success"}))
-
+        
         response.set_cookie(
             "token",
             token,

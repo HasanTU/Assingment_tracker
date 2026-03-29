@@ -20,3 +20,6 @@ Thumbs.db
 # Database / logs
 *.sqlite3
 *.log
+
+
+uploads/

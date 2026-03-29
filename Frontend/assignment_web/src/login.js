@@ -35,39 +35,10 @@ checkAuthAndRedirect();
 
 
 document.addEventListener("DOMContentLoaded", () => {
-    const btnTeacher = document.getElementById("btn-login-teacher");
-    const btnStudent = document.getElementById("btn-login-student");
+    const btnLogin = document.getElementById("btn-login");
 
-    btnTeacher.addEventListener("click", async (e) => {
-        e.preventDefault();
 
-        const username = document.getElementById("input-username").value;
-        const password = document.getElementById("input-password").value;
-        
-        try {
-            const response = await fetch("http://127.0.0.1:5000/api/loginTest", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({"username": username, "password":password }),
-                credentials: "include"
-            });
-
-            const data = await response.json();
-            if (!response.ok) {
-                alert(data.error || "Login failed");
-                return;
-            }
-
-            // login สำเร็จ → redirect
-            window.location.href = "teacher.html";
-
-        } catch (err) {
-            console.error(err);
-            alert("เกิดข้อผิดพลาด");
-        }
-    });
-
-    btnStudent.addEventListener("click", async (e) => {
+    btnLogin.addEventListener("click", async (e) => {
         e.preventDefault();
 
         const username = document.getElementById("input-username").value;
@@ -86,9 +57,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 alert(data.error || "Login failed");
                 return;
             }
-
+            
+            const role = data.role
             // login สำเร็จ → redirect
-            window.location.href = "student.html";
+            window.location.href = role + ".html";
 
         } catch (err) {
             console.error(err);

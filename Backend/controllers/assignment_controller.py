@@ -20,11 +20,16 @@ def create_assignment():
     description = data.get("description") or ""
     deadline = data.get("deadline")
 
-    assignment_service.create_assignment(username, title, course_name, description, deadline)
-        
+    assignment = assignment_service.create_assignment(username, title, course_name, description, deadline)
+    assignment_id = assignment.assignment_id
+    course_id = assignment.course_id
     return jsonify({
         "status": "success",
-        "message": "Assignment created successfully!"
+        "message": "Assignment created successfully!",
+        "data": {
+            "assignment_id":assignment_id,
+            "course_id":course_id
+        }
     }), 201
 
 @assignment_bp.route("", methods=["GET"])

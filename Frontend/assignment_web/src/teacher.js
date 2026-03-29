@@ -1,3 +1,18 @@
+async function uploadAssignmentFile(data){
+    // const assignmentId = data.assignment_id
+    // const courseId = data.course_id
+
+    // const dict = {
+    //     "assignment_id":assignmentId,
+    //     "course_id":courseId
+    // }
+
+    uploadFile('teacher-file', 'teacher', "/assignment", data)
+}
+
+
+
+
 async function createAssignment() {
     const title = document.getElementById("input-title").value;
     const deadline = document.getElementById("input-deadline").value;
@@ -29,8 +44,8 @@ async function createAssignment() {
             throw new Error(data.error || "error");
         }
 
-        uploadFile('teacher-file', 'teacher')
-
+        uploadAssignmentFile(data.data)
+        
         alert("สร้างงานเรียบร้อย!");
     } catch (err) {
         console.error(err);

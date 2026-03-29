@@ -8,7 +8,7 @@ function handleFileSelect(input, displayId) {
 }
 
 // ฟังก์ชันอัปโหลดไฟล์
-async function uploadFile(inputId, path) {
+async function uploadFile(inputId, path, url="/other", dataDict) {
     const fileInput = document.getElementById(inputId);
     const file = fileInput.files[0];
 
@@ -20,8 +20,16 @@ async function uploadFile(inputId, path) {
     const formData = new FormData();
     formData.append("file", file);
     formData.append("path", path);
+
+    if(dataDict){
+        for (let dataKey in dataDict) {
+            formData.append(dataKey, dataDict[dataKey]);
+        }
+    }
+
+
     try {
-        const response = await fetch("http://127.0.0.1:5000/api/upload", {
+        const response = await fetch("http://127.0.0.1:5000/api/upload" + url, {
             method: "POST",
             body: formData,
             credentials: "include"
@@ -36,6 +44,8 @@ async function uploadFile(inputId, path) {
         alert("ไม่สามารถติดต่อเซิร์ฟเวอร์ได้");
     }
 }
+
+
 
 // ฟังก์ชัน Logout
 async function logout() {

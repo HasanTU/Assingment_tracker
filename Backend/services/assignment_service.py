@@ -14,12 +14,14 @@ class AssignmentService:
 
     def create_assignment(self, username: str, title: str, course_name: str, description: str, deadline: datetime):
         user = self.user_service.get_user_by_username(username)
-        
-        if user is None: return
-        
+
+        if user is None:
+            raise ValueError("User not found")
+
         course = self.course_repo.get_by_name(course_name)
 
-        if course is None: return
+        if course is None:
+            raise ValueError("Course not found")
 
 
         assignment = Assignment(

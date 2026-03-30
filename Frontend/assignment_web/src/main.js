@@ -29,7 +29,7 @@ async function uploadFile(inputId, path, url="/other", dataDict) {
 
 
     try {
-        const response = await fetch("http://127.0.0.1:5000/api/upload" + url, {
+        const response = await fetch("http://localhost:5000/api/upload" + url, {
             method: "POST",
             body: formData,
             credentials: "include"
@@ -51,7 +51,7 @@ async function uploadFile(inputId, path, url="/other", dataDict) {
 async function logout() {
     if (confirm("ต้องการออกจากระบบ?")) {
         try {
-            const response = await fetch("http://127.0.0.1:5000/api/logout", {
+            const response = await fetch("http://localhost:5000/api/logout", {
                 method: "POST",
                 credentials: "include",
                 headers: {
@@ -89,7 +89,7 @@ async function initAuth() {
     if (isLoginPage) {
         if (cachedUser) {
             try {
-                const response = await fetch('http://127.0.0.1:5000/api/me', {
+                const response = await fetch('http://localhost:5000/api/me', {
                     method: "GET",
                     credentials: "include" 
                 });
@@ -106,7 +106,7 @@ async function initAuth() {
 
 
     try {
-        const response = await fetch('http://127.0.0.1:5000/api/me', {
+        const response = await fetch('http://localhost:5000/api/me', {
             method: "GET",
             credentials: "include"
         });

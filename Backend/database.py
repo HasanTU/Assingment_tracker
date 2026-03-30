@@ -12,7 +12,6 @@ from config import DATABASE_URL
 from models._base import Base
 
 
-
 engine = create_engine(DATABASE_URL, echo=True)
 SessionLocal = scoped_session(sessionmaker(bind=engine))
 Base.metadata.create_all(engine)

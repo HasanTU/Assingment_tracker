@@ -20,17 +20,27 @@ def create_assignment():
     description = data.get("description") or ""
     deadline = data.get("deadline")
 
-    assignment = assignment_service.create_assignment(username, title, course_name, description, deadline)
-    assignment_id = assignment.assignment_id
-    course_id = assignment.course_id
-    return jsonify({
+    
+    try:
+        assignment = assignment_service.create_assignment(username, title, course_name, description, deadline)
+
+        assignment_id = assignment.assignment_id
+        course_id = assignment.course_id
+
+        return jsonify({
         "status": "success",
         "message": "Assignment created successfully!",
         "data": {
             "assignment_id":assignment_id,
             "course_id":course_id
         }
-    }), 201
+        }), 201
+    
+    except ValueError as e:
+        return {"message": str(e)}, 404
+
+
+
 
 @assignment_bp.route("", methods=["GET"])
 @role_required(UserRole.TEACHER, UserRole.STUDENT)

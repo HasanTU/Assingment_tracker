@@ -1,7 +1,10 @@
-DATABASE_URL = "mssql+pyodbc://sa:SuperStrongPass123!@localhost:1433/assignment_system?driver=ODBC+Driver+17+for+SQL+Server"\
+import os
+from sqlalchemy import create_engine
 
-TU_API_URL = "https://restapi.tu.ac.th/api/v1/auth/Ad/verify"
-TU_API_APPKEY = "TU4a754b06dcc6dc817c633f8624299cf0178a8c7fc8ee0767408da24740b55c58449323e5c9e3c212a8490b3c5a34b474"
+DATABASE_URL = (f"mssql+pyodbc://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}@{os.getenv('DB_HOST')}:{os.getenv('DB_PORT')}/{os.getenv('DB_NAME')}?driver=ODBC+Driver+17+for+SQL+Server")\
+
+TU_API_URL = os.getenv('TU_API_URL')
+TU_API_APPKEY = os.getenv('TU_API_APPKEY')
 
 JWT_SECRET_KEY = "no_secret_key_here"
 JWT_ALGORITHM = "HS256"

@@ -9,6 +9,8 @@ from middlewares.auth import token_blacklist
 from models.enums.user_role import UserRole
 from werkzeug.utils import secure_filename
 
+from cloud_storage_helper import upload_file_to_cloud
+
 import jwt
 import os
 
@@ -19,22 +21,18 @@ def save_uploaded_file(file, relative_path):
     if not file or file.filename == '':
         return jsonify({"error": "No file selected"}), 400
 
-    # เตรียม Folder
-    target_dir = os.path.join(current_app.config['UPLOAD_FOLDER'], relative_path)
-    os.makedirs(target_dir, exist_ok=True)
+    # 🚀 โยนไฟล์และ Path ให้ Helper ของเราจัดการ (มันจะคิดเองว่าลง Local หรือ S3)
+    saved_path_or_url = upload_file_to_cloud(file, relative_path)
 
-    # Clean ชื่อไฟล์และบันทึก
-    filename = secure_filename(file.filename)
-    full_path = os.path.join(target_dir, filename)
-    file.save(full_path)
-
-    # คืนค่า Path ที่จะเอาไปเก็บใน Database (Relative Path)
-    db_path = os.path.join(relative_path, filename)
+    # เช็คว่าอัปโหลดพังไหม
+    if not saved_path_or_url:
+        return jsonify({"error": "Failed to upload file to storage"}), 500
     
+    #คืนค่ากลับไปให้ Frontend และนำ path ไปบันทึกใน Database
     return jsonify({
         "message": "Upload successful",
-        "db_path": db_path,
-        "filename": filename
+        "db_path": saved_path_or_url,
+        "filename": file.filename
     }), 200
 
 

@@ -41,7 +41,7 @@ async function createAssignment() {
         const data = await response.json();
 
         if (!response.ok) {
-            throw new Error(data.error || "error");
+            throw new Error(data.message || "error");
         }
 
         uploadAssignmentFile(data.data)

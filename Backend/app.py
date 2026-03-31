@@ -10,7 +10,7 @@ from flask_cors import CORS
 import os
 from werkzeug.utils import secure_filename
 
-from config import UPLOAD_FOLDER, ORIGIN_WEB_URL
+from config import UPLOAD_FOLDER, ORIGIN_WEB_URL, ORIGIN_WEB_URL_2
 
 app = Flask(__name__)
 db = SessionLocal()
@@ -38,7 +38,17 @@ app.register_blueprint(course_bp)
 def handle_preflight():
     if request.method == "OPTIONS":
         response = make_response()
-        response.headers.add("Access-Control-Allow-Origin", ORIGIN_WEB_URL)
+        
+        # 1. ดูว่า Request นี้ส่งมาจาก URL ไหน
+        origin = request.headers.get('Origin')
+        
+        # 2. รายการ URL ที่เราอนุญาต
+        allowed_origins = [ORIGIN_WEB_URL, ORIGIN_WEB_URL_2, "http://127.0.0.1:5500"]
+        
+        # 3. ถ้า URL นั้นอยู่ในลิสต์ ให้ตอบกลับด้วย URL นั้น
+        if origin in allowed_origins:
+            response.headers.add("Access-Control-Allow-Origin", origin)
+        
         response.headers.add("Access-Control-Allow-Headers", "Content-Type,Authorization")
         response.headers.add("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS")
         response.headers.add("Access-Control-Allow-Credentials", "true")

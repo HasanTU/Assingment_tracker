@@ -1,4 +1,5 @@
 import { CONFIG } from './config.js';
+import { uploadFile } from './main.js';
 
 async function uploadSubmissionFile(){
     const assignmentId = "1"
@@ -11,3 +12,5 @@ async function uploadSubmissionFile(){
 
     uploadFile('student-file', 'student', "/submission", dict)
 }
+
+window.uploadSubmissionFile = uploadSubmissionFile;

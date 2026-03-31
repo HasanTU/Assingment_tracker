@@ -1,4 +1,5 @@
 import { CONFIG } from './config.js';
+import { uploadFile } from './main.js';
 
 async function uploadAssignmentFile(data){
     // const assignmentId = data.assignment_id
@@ -54,3 +55,5 @@ async function createAssignment() {
         alert("สร้างไม่สำเร็จ");
     }
 }
+
+window.createAssignment = createAssignment

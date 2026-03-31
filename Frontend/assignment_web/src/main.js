@@ -1,5 +1,6 @@
 import { CONFIG } from './config.js';
 
+
 // ฟังก์ชันจัดการชื่อไฟล์
 function handleFileSelect(input, displayId) {
     const displayElement = document.getElementById(displayId);
@@ -10,7 +11,7 @@ function handleFileSelect(input, displayId) {
 }
 
 // ฟังก์ชันอัปโหลดไฟล์
-async function uploadFile(inputId, path, url="/other", dataDict) {
+export async function uploadFile(inputId, path, url="/other", dataDict) {
     const fileInput = document.getElementById(inputId);
     const file = fileInput.files[0];
 
@@ -31,7 +32,7 @@ async function uploadFile(inputId, path, url="/other", dataDict) {
 
 
     try {
-        const response = await fetch(`${CONFIG.BACKEND_API_URL}/api/upload${url}`, {
+        const response = await fetch(`${CONFIG.BACKEND_API_URL}/upload${url}`, {
             method: "POST",
             body: formData,
             credentials: "include"
@@ -156,3 +157,6 @@ function renderUserUI(user) {
         userNameEl.innerText = "อ. "+ user.first_name + " " + user.last_name + " (อาจารย์)"
     }
 }
+
+window.handleFileSelect = handleFileSelect;
+window.logout = logout;

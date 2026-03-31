@@ -1,3 +1,5 @@
+import { CONFIG } from './config.js';
+
 async function uploadSubmissionFile(){
     const assignmentId = "1"
     const courseId = "1"

@@ -1,3 +1,5 @@
+import { CONFIG } from './config.js';
+
 async function uploadAssignmentFile(data){
     // const assignmentId = data.assignment_id
     // const courseId = data.course_id
@@ -24,7 +26,7 @@ async function createAssignment() {
     }
 
     try {
-        const response = await fetch("http://127.0.0.1:5000/api/assignments/create", {
+        const response = await fetch(`${CONFIG.BACKEND_API_URL}/assignments/create`, {
             method: "POST",
             credentials: "include",
             headers: {

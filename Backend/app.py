@@ -10,7 +10,7 @@ from flask_cors import CORS
 import os
 from werkzeug.utils import secure_filename
 
-from config import UPLOAD_FOLDER
+from config import UPLOAD_FOLDER, ORIGIN_WEB_URL
 
 app = Flask(__name__)
 db = SessionLocal()
@@ -20,7 +20,7 @@ CORS(
     resources={
     r"/api/*":
     {
-        "origins": ["http://127.0.0.1:5500", "http://localhost:5500"],
+        "origins": ["http://127.0.0.1:5500", "http://localhost:5500", ORIGIN_WEB_URL],
         "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         "allow_headers": ["Content-Type", "Authorization"],
         "supports_credentials": True
@@ -38,7 +38,7 @@ app.register_blueprint(course_bp)
 def handle_preflight():
     if request.method == "OPTIONS":
         response = make_response()
-        response.headers.add("Access-Control-Allow-Origin", "http://127.0.0.1:5500")
+        response.headers.add("Access-Control-Allow-Origin", ORIGIN_WEB_URL)
         response.headers.add("Access-Control-Allow-Headers", "Content-Type,Authorization")
         response.headers.add("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS")
         response.headers.add("Access-Control-Allow-Credentials", "true")

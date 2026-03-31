@@ -1,3 +1,5 @@
+import { CONFIG } from './config.js';
+
 async function checkAuthAndRedirect() {
     const hasToken = document.cookie.split(';').some((item) => item.trim().startsWith('token='));
 
@@ -8,7 +10,7 @@ async function checkAuthAndRedirect() {
     }
 
     try {
-        const response = await fetch("http://127.0.0.1:5000/api/me", {
+        const response = await fetch(`${CONFIG.BACKEND_API_URL}/login`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
@@ -43,9 +45,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const username = document.getElementById("input-username").value;
         const password = document.getElementById("input-password").value;
-        
+ 
         try {
-            const response = await fetch("http://127.0.0.1:5000/api/login", {
+            const response = await fetch(`${CONFIG.BACKEND_API_URL}/login`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({"username": username, "password":password}),

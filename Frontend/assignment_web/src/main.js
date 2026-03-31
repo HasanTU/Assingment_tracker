@@ -1,3 +1,5 @@
+import { CONFIG } from './config.js';
+
 // ฟังก์ชันจัดการชื่อไฟล์
 function handleFileSelect(input, displayId) {
     const displayElement = document.getElementById(displayId);
@@ -29,7 +31,7 @@ async function uploadFile(inputId, path, url="/other", dataDict) {
 
 
     try {
-        const response = await fetch("http://127.0.0.1:5000/api/upload" + url, {
+        const response = await fetch(`${CONFIG.BACKEND_API_URL}/api/upload${url}`, {
             method: "POST",
             body: formData,
             credentials: "include"
@@ -51,7 +53,7 @@ async function uploadFile(inputId, path, url="/other", dataDict) {
 async function logout() {
     if (confirm("ต้องการออกจากระบบ?")) {
         try {
-            const response = await fetch("http://127.0.0.1:5000/api/logout", {
+            const response = await fetch(`${CONFIG.BACKEND_API_URL}/logout`, {
                 method: "POST",
                 credentials: "include",
                 headers: {
@@ -89,7 +91,7 @@ async function initAuth() {
     if (isLoginPage) {
         if (cachedUser) {
             try {
-                const response = await fetch('http://127.0.0.1:5000/api/me', {
+                const response = await fetch(`${CONFIG.BACKEND_API_URL}/me`, {
                     method: "GET",
                     credentials: "include" 
                 });
@@ -106,7 +108,7 @@ async function initAuth() {
 
 
     try {
-        const response = await fetch('http://127.0.0.1:5000/api/me', {
+        const response = await fetch(`${CONFIG.BACKEND_API_URL}/me`, {
             method: "GET",
             credentials: "include"
         });

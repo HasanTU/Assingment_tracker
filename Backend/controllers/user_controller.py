@@ -26,7 +26,7 @@ def login():
         response.set_cookie(
             "token",
             token,
-            httponly=False,
+            httponly=True,
             secure=False,
             samesite="Lax",
             max_age=JWT_EXPIRE_MINUTES * 60
@@ -52,7 +52,7 @@ def loginTest():
         response.set_cookie(
             "token",
             token,
-            httponly=False,
+            httponly=True,
             secure=False,
             samesite="Lax",
             max_age=JWT_EXPIRE_MINUTES * 60

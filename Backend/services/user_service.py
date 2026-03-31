@@ -12,8 +12,6 @@ from config import TU_API_URL, TU_API_APPKEY, JWT_SECRET_KEY, JWT_ALGORITHM, JWT
 class UserService:
     def __init__(self, db_session):
         self.user_repo = UserRepository(db_session)
-    
-
 
     def login_with_tuAPI(self, username: str, password: str):
        

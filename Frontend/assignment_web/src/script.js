@@ -139,6 +139,19 @@ function showList() {
 }
 
 // ===========================
+// LINE Popup
+// ===========================
+function openLinePopup() {
+  document.getElementById('line-overlay').classList.add('open');
+  document.getElementById('line-popup').classList.add('open');
+}
+ 
+function closeLinePopup() {
+  document.getElementById('line-overlay').classList.remove('open');
+  document.getElementById('line-popup').classList.remove('open');
+}
+
+// ===========================
 // Init
 // ===========================
 renderTasks();

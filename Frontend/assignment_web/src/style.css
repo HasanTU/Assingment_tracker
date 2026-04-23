@@ -466,3 +466,119 @@ html, body {
   flex-shrink: 0;
   stroke: var(--text3);
 }
+
+/* ===========================
+   LINE Button & Popup
+   =========================== */
+.line-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1.5px solid #06C755;
+  background: transparent;
+  color: #06C755;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+ 
+.line-btn:hover {
+  background: #06C755;
+  color: #fff;
+}
+ 
+.line-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: 100;
+}
+ 
+.line-overlay.open {
+  display: block;
+}
+ 
+.line-popup {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.95);
+  background: #2a2a2a;
+  border: 1px solid #444;
+  border-radius: 14px;
+  padding: 28px 24px 24px;
+  width: 300px;
+  z-index: 101;
+  text-align: center;
+  opacity: 0;
+  transition: transform 0.18s ease, opacity 0.18s ease;
+}
+ 
+.line-popup.open {
+  display: block;
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+ 
+.line-popup-close {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  background: none;
+  border: none;
+  color: var(--text3);
+  font-size: 14px;
+  cursor: pointer;
+  line-height: 1;
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition: color 0.15s;
+}
+ 
+.line-popup-close:hover {
+  color: var(--text);
+}
+ 
+.line-popup-icon {
+  margin-bottom: 12px;
+}
+ 
+.line-popup-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #f0f0f0;
+  margin-bottom: 10px;
+}
+ 
+.line-popup-desc {
+  font-size: 13px;
+  color: var(--text2);
+  line-height: 1.7;
+  margin-bottom: 20px;
+}
+ 
+.line-popup-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 0;
+  border-radius: 9px;
+  background: #06C755;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+ 
+.line-popup-btn:hover {
+  background: #05a848;
+}
+ 

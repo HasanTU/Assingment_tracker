@@ -40,6 +40,21 @@ def link_line_user(student_id, line_user_id):
     finally:
         conn.close()
 
+def save_moodle_user_id(student_id, moodle_user_id):
+    conn = get_conn()
+    cursor = conn.cursor()
+    try:
+        cursor.execute("UPDATE users SET moodle_user_id = ? WHERE student_id = ?",
+                       (moodle_user_id, student_id))
+        conn.commit()
+        return True
+    except Exception as e:
+        print(f"[UserRepo] Error: {e}")
+        return False
+    finally:
+        conn.close()
+
+
 
 def save_moodle_api(student_id, moodle_api):
     conn = get_conn()
@@ -54,6 +69,15 @@ def save_moodle_api(student_id, moodle_api):
         return False
     finally:
         conn.close()
+
+
+def get_moodle_user_id_by_student_id(student_id):
+    conn = get_conn()
+    cursor = conn.cursor()
+    cursor.execute("SELECT moodle_user_id FROM users WHERE student_id = ?", (student_id,))
+    row = cursor.fetchone()
+    conn.close()
+    return row[0] if row else None
 
 
 def get_user_by_student_id(student_id):

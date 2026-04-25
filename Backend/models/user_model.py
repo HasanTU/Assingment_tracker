@@ -11,6 +11,7 @@ def create_users_table():
             username              TEXT,
             display_name          TEXT,
             moodle_API            TEXT,
+            moodle_user_id        TEXT,
             line_user_id          TEXT,
             is_line_notify_active BOOLEAN DEFAULT 0,
             last_login            TIMESTAMP,

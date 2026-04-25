@@ -1,4 +1,4 @@
-import { CONFIG } from './config.js';
+import { CONFIG } from '../config.js';
 
 document.addEventListener("DOMContentLoaded", () => {
     const btnLogin = document.getElementById("btn-login");
@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log("Data parsed:", data); // เพิ่มบรรทัดนี้
 
     if (response.ok) {
-        window.location.href = "student.html";
+        window.location.href = "../home.html";
     } else {
         alert(data.error || "Login ไม่สำเร็จ");
     }

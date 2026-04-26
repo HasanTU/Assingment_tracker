@@ -37,7 +37,7 @@
 
     <div class="sidebar-spacer"></div>
     <div class="sidebar-logout">
-      <div class="logout-btn">
+      <div class="logout-btn" onclick="logout()">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
           <polyline points="16 17 21 12 16 7"/>
@@ -87,7 +87,7 @@
         </svg>
       </div>
       <div class="line-popup-title">เพิ่มเพื่อนใน LINE</div>
-      <div class="line-popup-desc">เพื่อรับการแจ้งเตือนเกี่ยวกับงานที่ต้องทำ</div>
+      <div class="line-popup-desc">เพื่อรับแจ้งเตือนเกี่ยวกับงานที่ส่งจากเรา</div>
       <a class="line-popup-btn" href="https://line.me/R/ti/p/@570vmhke" target="_blank" rel="noopener">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
           <path d="M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.070 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/>
@@ -162,8 +162,14 @@
   </div>
 </div>
 
-<!-- โหลด data ก่อน แล้วค่อยโหลด logic -->
-<script src="data/tasks.js"></script>
+<!-- Auth Guard: ต้องเช็คก่อนโหลด script ใดๆ -->
+<script>
+  if (!sessionStorage.getItem('isLoggedIn')) {
+    window.location.href = 'login.html';
+  }
+</script>
+
+<script src="tasks.js"></script>
 <script src="script.js"></script>
 </body>
 </html>

@@ -118,6 +118,14 @@ function showList() {
 }
 
 // ===========================
+// Logout
+// ===========================
+function logout() {
+  sessionStorage.removeItem('isLoggedIn');
+  window.location.href = 'login.html';
+}
+
+// ===========================
 // LINE Popup
 // ===========================
 function openLinePopup() {

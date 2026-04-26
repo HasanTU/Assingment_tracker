@@ -14,16 +14,14 @@ var tasks = [
   { id: 8, name: 'Lab 3',           course: 'CS217', due: '25 Mar 2026', status: 'done',    desc: 'ทดลองและรายงานผลการทดลองวงจรดิจิทัลพื้นฐาน' },
 ];
 
-// summary stats (นับรวม — backend คำนวณให้ได้เลย)
-var statsByAll = { done: 23, pending: 15, late: 3 };
+// คำนวณ stats จาก tasks array จริงๆ (ไม่ hardcode)
+var statsByAll = tasks.reduce(function(acc, t) {
+  acc[t.status] = (acc[t.status] || 0) + 1;
+  return acc;
+}, { done: 0, pending: 0, late: 0 });
 
-// stats แยกตามวิชา
-var statsByCourse = {
-  'CS232': { done: 6, pending: 1, late: 0 },
-  'CS251': { done: 4, pending: 2, late: 0 },
-  'CS222': { done: 8, pending: 0, late: 1 },
-  'CS271': { done: 2, pending: 1, late: 0 },
-  'CS242': { done: 1, pending: 0, late: 0 },
-  'CS217': { done: 1, pending: 0, late: 0 },
-  'EL395': { done: 1, pending: 0, late: 0 },
-};
+var statsByCourse = tasks.reduce(function(acc, t) {
+  if (!acc[t.course]) acc[t.course] = { done: 0, pending: 0, late: 0 };
+  acc[t.course][t.status] = (acc[t.course][t.status] || 0) + 1;
+  return acc;
+}, {});

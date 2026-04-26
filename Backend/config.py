@@ -21,7 +21,7 @@ TU_API_KEY = os.getenv("TU_API_KEY", "")
 #
 MOODLE_API_URL_LOGIN = os.getenv("MOODLE_API_URL_LOGIN", "https://courses.cs.tu.ac.th/login/token.php") 
 MOODLE_API_URL_GET = os.getenv("MOODLE_API_URL_GET", "https://courses.cs.tu.ac.th/webservice/rest/server.php") 
-
+MOODLE_VIEW_URL = os.getenv("MOODLE_VIEW_URL", "https://your-moodle-site/mod/assign/view.php?id=") 
 # ─── CORS ─────────────────────────────────────────────────
 ALLOWED_ORIGINS = [
     "http://127.0.0.1:5500",

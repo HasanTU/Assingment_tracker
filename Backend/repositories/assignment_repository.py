@@ -27,6 +27,43 @@ def save_assignment(moodle_event_uid, title, deadline,
     finally:
         conn.close()
 
+def update_assignment_deadline_and_description(moodle_event_uid, deadline, description):
+    if deadline is None or description is None: return
+
+    conn = get_conn()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        UPDATE assignments
+        SET deadline = ?, description = ?
+        WHERE moodle_event_uid = ?
+        AND (
+                deadline IS NULL OR deadline != ?
+            OR description IS NULL OR description != ?
+        )
+    """, (deadline, description, moodle_event_uid, deadline, description))
+
+    conn.commit()
+    row = cursor.fetchone()
+    conn.close()
+
+    return row["assignment_id"] if row else None
+
+def get_assignment_by_moodle_id(id):
+    conn = get_conn()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM assignments WHERE moodle_event_uid = ?", (id,))
+    row = cursor.fetchone()
+    conn.close()
+    return dict(row) if row else None
+
+def get_assignment_by_assignment_id(id):
+    conn = get_conn()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM assignments WHERE assignment_id = ?", (id,))
+    row = cursor.fetchone()
+    conn.close()
+    return dict(row) if row else None
 
 def get_all_assignments():
     conn = get_conn()

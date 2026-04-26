@@ -1,10 +1,8 @@
-import { CONFIG } from '../config.js';
-
 document.addEventListener("DOMContentLoaded", () => {
     const btnLogin = document.getElementById("btn-login");
     
     // ตรวจสอบเบื้องต้นว่าเจอตัวแปรไหม
-    console.log("Config URL:", CONFIG.BACKEND_API_URL);
+    console.log("Config URL:", APP.CONFIG.BACKEND_API_URL);
 
     if (btnLogin) {
         btnLogin.addEventListener("click", async (e) => {
@@ -21,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
            try {
     console.log("Starting fetch..."); // เพิ่มบรรทัดนี้
-    const response = await fetch(`${CONFIG.BACKEND_API_URL}/login`, {
+    const response = await fetch(`${APP.CONFIG.BACKEND_API_URL}/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),

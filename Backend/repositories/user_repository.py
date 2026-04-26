@@ -71,6 +71,14 @@ def save_moodle_api(student_id, moodle_api):
         conn.close()
 
 
+def get_moodle_token_by_student_id(student_id):
+    conn = get_conn()
+    cursor = conn.cursor()
+    cursor.execute("SELECT moodle_API FROM users WHERE student_id = ?", (student_id,))
+    row = cursor.fetchone()
+    conn.close()
+    return row[0] if row else None
+
 def get_moodle_user_id_by_student_id(student_id):
     conn = get_conn()
     cursor = conn.cursor()

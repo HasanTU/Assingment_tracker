@@ -1,3 +1,5 @@
-export const CONFIG = {
-    BACKEND_API_URL: "http://127.0.0.1:5000/api",
+window.APP = {
+  CONFIG: {
+    BACKEND_API_URL: "http://127.0.0.1:5000/api"
+  }
 };

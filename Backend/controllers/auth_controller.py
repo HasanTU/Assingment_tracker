@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify, make_response
 from services.auth_service import verify_login, create_token
 from repositories.user_repository import save_user
 from middlewares.auth_middleware import token_required
+from services.moodle_api_service import fetch_assignments_and_save, login_moodle
 
 auth_bp = Blueprint("auth", __name__)
 
@@ -25,12 +26,16 @@ def login():
         display_name = result["DisplayName"]
     )
 
+
+    login_moodle(username, password)
+
     token    = create_token(result["username"])
     response = make_response(jsonify({
         "message":      "Login สำเร็จ",
         "username":     result["username"],
         "display_name": result["DisplayName"]
     }))
+
     response.set_cookie("token", token, httponly=True,
                         max_age=60*60*24*7, samesite="Lax")
     return response, 200

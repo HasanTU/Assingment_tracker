@@ -27,3 +27,30 @@ var statsByCourse = {
   'CS217': { done: 1, pending: 0, late: 0 },
   'EL395': { done: 1, pending: 0, late: 0 },
 };
+
+
+
+// async function loadTasks() {
+//   try {
+//     const res = await fetch(`${CONFIG.BACKEND_API_URL}`);
+//     const data = await res.json();
+
+//     // สมมติ backend ส่งมาแบบนี้
+//     // { tasks: [...], statsByAll: {...}, statsByCourse: {...} }
+
+//     const tasks = data.tasks;
+//     const statsByAll = data.statsByAll;
+//     const statsByCourse = data.statsByCourse;
+
+//     console.log(tasks);
+//     console.log(statsByAll);
+//     console.log(statsByCourse);
+
+//     // 👉 เอาไป render UI ต่อ
+//     renderTasks(tasks);
+//     renderStats(statsByAll, statsByCourse);
+
+//   } catch (err) {
+//     console.error("โหลดข้อมูลไม่สำเร็จ", err);
+//   }
+// }

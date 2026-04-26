@@ -1,14 +1,99 @@
 from database import get_conn
 
+def get_all_user_tasks_by_user_id(user_id):
+    conn = get_conn()
+    cursor = conn.cursor()
 
-def save_user_task(user_id, assignment_id):
+    cursor.execute("""
+        SELECT 
+            ut.*,
+            a.deadline
+        FROM user_tasks ut
+        JOIN assignments a
+        ON ut.assignment_id = a.assignment_id
+        WHERE ut.user_id = ?
+        ORDER BY a.deadline ASC
+    """, (user_id,))
+
+    rows = cursor.fetchall()
+    conn.close()
+
+    return [dict(row) for row in rows]
+
+def get_all_user_tasks_by_user_id_and_course_id(user_id, course_id):
+    conn = get_conn()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT 
+            ut.*,
+            a.deadline
+        FROM user_tasks ut
+        JOIN assignments a
+        ON ut.assignment_id = a.assignment_id
+        WHERE ut.user_id = ?
+        AND a.course_id = ?
+        ORDER BY a.deadline ASC
+    """, (user_id, course_id))
+
+    rows = cursor.fetchall()
+    conn.close()
+
+    return [dict(row) for row in rows]
+
+
+
+
+def get_user_task_by_user_id_and_assignment_id(user_id, assignment_id):
+    conn = get_conn()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT *
+        FROM user_tasks
+        WHERE user_id = ? AND assignment_id = ?
+    """, (user_id, assignment_id))
+
+    row = cursor.fetchone()
+    conn.close()
+
+    return dict(row) if row else None
+
+
+def get_all_user_task_and_assignment_info_by_user_id(user_id):
+    conn = get_conn()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT 
+            ut.assignment_id,
+            ut.status,
+            a.course_name,
+            a.title,
+            a.description,
+            a.source_url,
+            a.deadline
+        FROM user_tasks ut
+        JOIN assignments a
+        ON ut.assignment_id = a.assignment_id
+        WHERE ut.user_id = ?
+        ORDER BY a.deadline ASC
+    """, (user_id,))
+
+    rows = cursor.fetchall()
+    conn.close()
+
+    return [dict(row) for row in rows]
+
+
+def save_user_task(user_id, assignment_id, status="pending"):
     conn = get_conn()
     cursor = conn.cursor()
     try:
         cursor.execute("""
-            INSERT OR IGNORE INTO user_tasks (user_id, assignment_id)
-            VALUES (?, ?)
-        """, (user_id, assignment_id))
+            INSERT OR IGNORE INTO user_tasks (user_id, assignment_id, status)
+            VALUES (?, ?, ?)
+        """, (user_id, assignment_id, status))
         conn.commit()
         return True
     except Exception as e:

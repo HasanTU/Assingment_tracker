@@ -12,6 +12,7 @@ from controllers.user_task_controller import user_task_bp
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True, origins=ALLOWED_ORIGINS)
+CORS(app, supports_credentials=True, origins=["http://127.0.0.1:5500"])
 
 
 app.register_blueprint(auth_bp)

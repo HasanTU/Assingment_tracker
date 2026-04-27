@@ -30,7 +30,7 @@ def login_moodle(username, password):
             "Content-Type": "application/x-www-form-urlencoded"
         }
 
-        res = requests.post(MOODLE_API_URL_LOGIN, data=payload, headers=headers, timeout=10)
+        res = requests.post(MOODLE_API_URL_LOGIN, data=payload, headers=headers, timeout=20)
         data = res.json()
 
 
@@ -89,7 +89,23 @@ def fetch_user_info_and_save(token, username):
 
 
 
+def sync_assignments(student_id):
+    user = get_user_by_student_id(student_id)
+    if not user: return False
+
+    token = user.get("moodle_API")
+    if not token: return False
+
+    fetch_assignments_info = fetch_assignments_and_save(token, student_id)
+
+    if fetch_assignments_info.get("status") == False:
+        print(fetch_assignments_info)
+        return False
     
+    return True
+
+
+
 
 def fetch_assignments_and_save(token, student_id):
     try:
@@ -172,8 +188,8 @@ def fetch_assignments_and_save(token, student_id):
 
 def sync_all_user_tasks(student_id):
     user = get_user_by_student_id(student_id)
-    if not user:
-        return False
+    if not user: return False
+        
 
     user_id = user["user_id"]
     token = user["moodle_API"]

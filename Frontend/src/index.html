@@ -24,20 +24,21 @@
       </div>
       <span class="sidebar-brand-text">5 เมฆา</span>
     </div>
-
-    <div class="sidebar-section">วิชาของฉัน</div>
-    <div class="sbi active" onclick="filterCourse('all', this)"><div class="sbi-dot"></div>All Task</div>
-    <div class="sbi" onclick="filterCourse('CS232', this)"><div class="sbi-dot"></div>CS 232</div>
-    <div class="sbi" onclick="filterCourse('CS251', this)"><div class="sbi-dot"></div>CS 251</div>
-    <div class="sbi" onclick="filterCourse('CS222', this)"><div class="sbi-dot"></div>CS 222</div>
-    <div class="sbi" onclick="filterCourse('CS271', this)"><div class="sbi-dot"></div>CS 271</div>
-    <div class="sbi" onclick="filterCourse('CS242', this)"><div class="sbi-dot"></div>CS 242</div>
-    <div class="sbi" onclick="filterCourse('CS217', this)"><div class="sbi-dot"></div>CS 217</div>
-    <div class="sbi" onclick="filterCourse('EL395', this)"><div class="sbi-dot"></div>EL 395</div>
+    <div class="sidebar-courses-list">
+      <div class="sidebar-section">วิชาของฉัน</div>
+      <div class="sbi active" onclick="filterCourse('all', this)"><div class="sbi-dot"></div>All Task</div>
+      <!-- <div class="sbi" onclick="filterCourse('CS232', this)"><div class="sbi-dot"></div>CS 232</div>
+      <div class="sbi" onclick="filterCourse('CS251', this)"><div class="sbi-dot"></div>CS 251</div>
+      <div class="sbi" onclick="filterCourse('CS222', this)"><div class="sbi-dot"></div>CS 222</div>
+      <div class="sbi" onclick="filterCourse('CS271', this)"><div class="sbi-dot"></div>CS 271</div>
+      <div class="sbi" onclick="filterCourse('CS242', this)"><div class="sbi-dot"></div>CS 242</div>
+      <div class="sbi" onclick="filterCourse('CS217', this)"><div class="sbi-dot"></div>CS 217</div>
+      <div class="sbi" onclick="filterCourse('EL395', this)"><div class="sbi-dot"></div>EL 395</div> -->
+    </div>
 
     <div class="sidebar-spacer"></div>
     <div class="sidebar-logout">
-      <div class="logout-btn">
+      <div class="logout-btn" onclick="logout()">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
           <polyline points="16 17 21 12 16 7"/>
@@ -66,7 +67,7 @@
         </button>
         <div class="topbar-name">
           <strong>Krisanapol</strong>
-          Bunrueang
+          <span>Bunrueang</span>
         </div>
         <div class="avatar">
           <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
@@ -87,7 +88,7 @@
         </svg>
       </div>
       <div class="line-popup-title">เพิ่มเพื่อนใน LINE</div>
-      <div class="line-popup-desc">เพื่อรับการแจ้งเตือนเกี่ยวกับงานที่ต้องทำ</div>
+      <div class="line-popup-desc">เพื่อรับแจ้งเตือนเกี่ยวกับงานที่ส่งจากเรา</div>
       <a class="line-popup-btn" href="https://line.me/R/ti/p/@570vmhke" target="_blank" rel="noopener">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
           <path d="M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.070 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/>
@@ -147,13 +148,16 @@
           </div>
           <div class="detail-desc-label">คำอธิบาย</div>
           <div class="detail-desc" id="d-desc"></div>
+          <div id="d-assignment-url" class="assignment-url-link-notice readonly-notice">
+            ลิงค์งาน<a href="" target="_blank" rel="noopener noreferrer"></a>
+          </div>
           <div class="readonly-notice">
             <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
               <circle cx="12" cy="12" r="10"/>
               <line x1="12" y1="8" x2="12" y2="12"/>
               <line x1="12" y1="16" x2="12.01" y2="16"/>
             </svg>
-            สถานะ sync มาจาก Microsoft Teams — ไม่สามารถส่งงานในระบบนี้ได้
+            สถานะ sync มาจาก Moodle — ไม่สามารถส่งงานในระบบนี้ได้
           </div>
         </div>
       </div>
@@ -162,9 +166,18 @@
   </div>
 </div>
 
-<!-- โหลด data ก่อน แล้วค่อยโหลด logic -->
+<!-- Auth Guard: ต้องเช็คก่อนโหลด script ใดๆ -->
+
+<script>
+  if (!sessionStorage.getItem('isLoggedIn')) {
+    window.location.href = 'login.html';
+  }
+</script>
+
 <script src="config.js"></script>
-<script src="data/tasks.js"></script>
+<script src="tasks.js"></script>
 <script src="script.js"></script>
+
+
 </body>
 </html>

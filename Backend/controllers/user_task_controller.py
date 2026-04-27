@@ -11,4 +11,7 @@ user_task_bp = Blueprint("user_task", __name__)
 def get_tasks():
     student_id = request.current_user
     tasks = get_all_user_tasks_info_by_student_id(student_id)
+    for t in tasks:
+        if t.get("course_name") and len(t["course_name"]) > 3:
+            t["course_name"] = t["course_name"][:-3]
     return jsonify({"data": tasks}), 200

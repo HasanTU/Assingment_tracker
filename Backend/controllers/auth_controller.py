@@ -33,12 +33,15 @@ def login():
     response = make_response(jsonify({
         "message":      "Login สำเร็จ",
         "username":     result["username"],
-        "display_name": result["DisplayName"]
-    }))
+        "display_name": result["DisplayName"],
+        "token":token
+    }), 200)
 
-    response.set_cookie("token", token, httponly=True,
+    print("Token Created")
+
+    response.set_cookie("token", token, httponly=True, secure=False,
                         max_age=60*60*24*7, samesite="Lax")
-    return response, 200
+    return response
 
 
 @auth_bp.route("/api/login", methods=["GET"])

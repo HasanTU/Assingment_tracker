@@ -41,6 +41,29 @@ function makeCard(t) {
 // ===========================
 // Render Tasks
 // ===========================
+
+function renderCourses(){
+  const sidebar = document.querySelector(".sidebar-courses-list");
+
+  courses.forEach(course => {
+    const div = document.createElement("div");
+    div.className = "sbi";
+
+    div.onclick = function () {
+      filterCourse(course, this);
+    };
+
+    const dot = document.createElement("div");
+    dot.className = "sbi-dot";
+
+    div.appendChild(dot);
+    div.appendChild(document.createTextNode(course));
+
+    sidebar.appendChild(div);
+  });
+}
+
+
 function renderTasks() {
   var filtered = currentCourse === 'all'
     ? tasks
@@ -52,6 +75,18 @@ function renderTasks() {
   document.getElementById('task-list').innerHTML      = active.map(makeCard).join('');
   document.getElementById('completed-list').innerHTML = done.map(makeCard).join('');
 
+  var statsByAll = tasks.reduce(function(acc, t) {
+    acc[t.status] = (acc[t.status] || 0) + 1;
+    return acc;
+  }, { done: 0, pending: 0, late: 0 });
+
+  var statsByCourse = tasks.reduce(function(acc, t) {
+    if (!acc[t.course]) acc[t.course] = { done: 0, pending: 0, late: 0 };
+    acc[t.course][t.status] = (acc[t.course][t.status] || 0) + 1;
+    return acc;
+  }, {});
+
+
   var s = currentCourse === 'all'
     ? statsByAll
     : (statsByCourse[currentCourse] || { done: 0, pending: 0, late: 0 });
@@ -59,12 +94,16 @@ function renderTasks() {
   document.getElementById('stat-done').textContent    = s.done;
   document.getElementById('stat-pending').textContent = s.pending;
   document.getElementById('stat-late').textContent    = s.late;
+
+
+
 }
 
 // ===========================
 // Filter by Course
 // ===========================
 function filterCourse(course, el) {
+  showList()
   currentCourse = course;
 
   document.querySelectorAll('.sbi').forEach(function(b) { b.classList.remove('active'); });
@@ -92,13 +131,20 @@ function toggleCompleted() {
 // ===========================
 // Page Navigation
 // ===========================
+
+
 function showDetail(id) {
   var t = tasks.find(function(x) { return x.id === id; });
   if (!t) return;
 
   document.getElementById('d-title').textContent  = t.name;
   document.getElementById('d-course').textContent = t.course;
-  document.getElementById('d-desc').textContent   = t.desc;
+  //document.getElementById('d-desc').textContent   = t.desc;
+
+  container = document.getElementById('d-desc')
+  container.textContent   = ""
+  container.innerHTML = "";
+  container.innerHTML = t.desc;
 
   var due = document.getElementById('d-due');
   due.textContent = 'Due: ' + t.due;
@@ -108,6 +154,10 @@ function showDetail(id) {
   badge.textContent = getBadgeText(t.status);
   badge.className   = 'badge ' + getBadgeClass(t.status);
 
+  const link = document.querySelector("#d-assignment-url a");
+  link.href = t.source_url;
+  link.textContent = t.source_url;
+
   document.getElementById('page-list').classList.remove('active');
   document.getElementById('page-detail').classList.add('active');
 }
@@ -115,6 +165,36 @@ function showDetail(id) {
 function showList() {
   document.getElementById('page-detail').classList.remove('active');
   document.getElementById('page-list').classList.add('active');
+}
+
+// ===========================
+// Logout
+// ===========================
+async function logout() {
+  try {
+    const response = await fetch(`${APP.CONFIG.BACKEND_API_URL}/logout`, {
+        method: "POST",
+        credentials: "include"
+    });
+
+    if (response.ok) {
+        // 1. ล้างข้อมูลใน Browser
+        sessionStorage.clear();
+        
+        // 2. ส่งกลับหน้า Login
+        window.location.replace("login.html");
+    } else {
+        console.error("Logout failed");
+    }
+  } catch (err) {
+      console.error("Error during logout:", err);
+      // ถึง Error ก็ควรล้างฝั่ง Client และเด้งออกเพื่อความปลอดภัย
+      sessionStorage.clear();
+      window.location.replace("login.html");
+  }
+
+  // sessionStorage.removeItem('isLoggedIn');
+  // window.location.href = 'login.html';
 }
 
 // ===========================
@@ -133,4 +213,23 @@ function closeLinePopup() {
 // ===========================
 // Init
 // ===========================
-renderTasks();
+
+document.addEventListener("DOMContentLoaded", async () => {
+  const user = JSON.parse(sessionStorage.getItem("user"));
+
+  console.log(user)
+
+  document.querySelector(".topbar-name strong").textContent = user?.display_name || "Guest";
+  document.querySelector(".topbar-name span").textContent = user?.username || "--";
+})
+
+
+// document.addEventListener("DOMContentLoaded", async () => {
+//   renderCourses()
+//   renderTasks();
+
+// })
+// window.addEventListener("tasksLoaded", () => {
+//   // คำนวณ stats จาก tasks array จริงๆ (ไม่ hardcode)
+//   renderTasks();
+// });

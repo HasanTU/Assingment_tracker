@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>5 เมฆา — เข้าสู่ระบบ</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="auth-bg">
+  <div class="auth-card">
+
+    <!-- Logo -->
+    <div class="auth-logo">
+      <div class="auth-logo-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+      </div>
+      <span class="auth-logo-text">5 เมฆา</span>
+    </div>
+
+    <h2 class="auth-title">เข้าสู่ระบบ</h2>
+    <p class="auth-subtitle">ระบบติดตามงานที่ได้รับมอบหมาย</p>
+
+    <!-- Form -->
+    <div class="auth-form">
+      <div class="form-group">
+        <label class="form-label">ชื่อผู้ใช้</label>
+        <input class="form-input" type="text" id="login-email" placeholder="example@university.ac.th">
+      </div>
+      <div class="form-group">
+        <label class="form-label">รหัสผ่าน</label>
+        <input class="form-input" type="password" id="login-password" placeholder="••••••••">
+      </div>
+
+      <!-- Error message -->
+      <div class="auth-error" id="login-error" style="display:none;">
+        ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง
+      </div>
+
+      <button type="button" id="auth-btn-login" class="auth-btn" >ยืนยัน</button>
+    </div>
+
+    <div class="auth-footer">
+      <!-- ยังไม่มีบัญชี?
+      <a href="register.html" class="auth-link">สมัครสมาชิก</a> -->
+    </div>
+
+  </div>
+</div>
+
+<script>
+  if (sessionStorage.getItem('isLoggedIn')) {
+    window.location.href = 'index.html';
+  }
+</script>
+
+<script src="config.js"></script>
+<script src="login.js"></script>
+
+
+
+</body>
+</html>

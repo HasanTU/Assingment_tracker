@@ -1,40 +1,24 @@
-console.log("SCRIPT LOADED");
-
-
 document.addEventListener("DOMContentLoaded", () => {
-    console.log("Config URL:", APP.CONFIG.BACKEND_API_URL);
-
     const btnLogin = document.getElementById("auth-btn-login");
     const emailInput = document.getElementById("login-email");
     const passwordInput = document.getElementById("login-password");
     const errorEl = document.getElementById('login-error');
-
-    const handleEnter = (e) => {
-        if (e.key === "Enter") {
-            e.preventDefault();
-            btnLogin.click();
-        }
-    };
-
-    emailInput.addEventListener("keydown", handleEnter);
-    passwordInput.addEventListener("keydown", handleEnter);
 
     btnLogin.addEventListener("click", async () => {
         const username = emailInput.value.trim();
         const password = passwordInput.value;
 
         if (!username || !password) {
-            errorEl.textContent = 'กรุณากรอกรหัสนักศึกษาและรหัสผ่าน';
+            errorEl.textContent = 'กรุณากรอกข้อมูลให้ครบถ้วน';
             errorEl.style.display = 'block';
             return;
         }
 
-        // ปิดปุ่มระหว่างรอป้องกันการกดซ้ำ
         btnLogin.disabled = true;
         btnLogin.textContent = "กำลังตรวจสอบ...";
+        errorEl.style.display = 'none';
 
         try {
-            console.log("Starting fetch...");
             const response = await fetch(`${APP.CONFIG.BACKEND_API_URL}/login`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -42,45 +26,33 @@ document.addEventListener("DOMContentLoaded", () => {
                 credentials: "include"
             });
 
-            console.log("Response received:", response.status);
             const data = await response.json();
-            console.log("Data parsed:", data);
-            
-            
+
             if (response.ok) {
+                // บันทึก Session
                 sessionStorage.setItem('isLoggedIn', 'true');
                 sessionStorage.setItem("user", JSON.stringify({
                     username: data.username,
                     display_name: data.display_name
                 }));
 
-                console.log(data.username, data.display_name);
-
-                errorEl.style.display = 'none';
-                
-                // เปลี่ยนหน้าทันที
-                window.location.replace("index.html");
+                // ย้ายไปหน้า student.html
+                window.location.replace("student.html"); 
             } else {
-                errorEl.textContent = data.message || 'รหัสนักศึกษาหรือรหัสผ่านผิด';
+                errorEl.textContent = data.message || 'รหัสผิดหรือเข้าสู่ระบบไม่ได้';
                 errorEl.style.display = 'block';
                 btnLogin.disabled = false;
                 btnLogin.textContent = "ยืนยัน";
             }
         } catch (err) {
-            console.error("Fetch Error Detail:", err);
-            errorEl.textContent = 'ติดต่อ Server ไม่ได้';
+            console.error("Error:", err);
+            errorEl.textContent = 'ติดต่อเซิร์ฟเวอร์ไม่ได้';
             errorEl.style.display = 'block';
             btnLogin.disabled = false;
             btnLogin.textContent = "ยืนยัน";
         }
-
     });
 });
-
-
-
-
-
 // async function handleLogin(e) {
 //     e.preventDefault();
 //     e.stopPropagation();

@@ -182,7 +182,7 @@ async function logout() {
         sessionStorage.clear();
         
         // 2. ส่งกลับหน้า Login
-        window.location.replace("login.html");
+        window.location.replace("index.html");
     } else {
         console.error("Logout failed");
     }
@@ -190,7 +190,7 @@ async function logout() {
       console.error("Error during logout:", err);
       // ถึง Error ก็ควรล้างฝั่ง Client และเด้งออกเพื่อความปลอดภัย
       sessionStorage.clear();
-      window.location.replace("login.html");
+      window.location.replace("index.html");
   }
 
   // sessionStorage.removeItem('isLoggedIn');

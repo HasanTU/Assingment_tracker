@@ -1,7 +1,5 @@
 // ===========================
 // script.js — App Logic
-// ไม่มี data อยู่ที่นี่
-// data ทั้งหมดอยู่ใน data/tasks.js
 // ===========================
 
 // State
@@ -39,30 +37,27 @@ function makeCard(t) {
 }
 
 // ===========================
-// Render Tasks
+// Render Functions
 // ===========================
-
 function renderCourses(){
   const sidebar = document.querySelector(".sidebar-courses-list");
+  // ล้างรายการเดิมก่อน (ยกเว้นหัวข้อ)
+  const existingItems = sidebar.querySelectorAll(".sbi:not(.active)");
+  existingItems.forEach(item => item.remove());
 
   courses.forEach(course => {
     const div = document.createElement("div");
     div.className = "sbi";
-
-    div.onclick = function () {
-      filterCourse(course, this);
-    };
+    div.onclick = function () { filterCourse(course, this); };
 
     const dot = document.createElement("div");
     dot.className = "sbi-dot";
 
     div.appendChild(dot);
     div.appendChild(document.createTextNode(course));
-
     sidebar.appendChild(div);
   });
 }
-
 
 function renderTasks() {
   var filtered = currentCourse === 'all'
@@ -86,7 +81,6 @@ function renderTasks() {
     return acc;
   }, {});
 
-
   var s = currentCourse === 'all'
     ? statsByAll
     : (statsByCourse[currentCourse] || { done: 0, pending: 0, late: 0 });
@@ -94,16 +88,13 @@ function renderTasks() {
   document.getElementById('stat-done').textContent    = s.done;
   document.getElementById('stat-pending').textContent = s.pending;
   document.getElementById('stat-late').textContent    = s.late;
-
-
-
 }
 
 // ===========================
-// Filter by Course
+// Interaction Functions
 // ===========================
 function filterCourse(course, el) {
-  showList()
+  showList();
   currentCourse = course;
 
   document.querySelectorAll('.sbi').forEach(function(b) { b.classList.remove('active'); });
@@ -119,19 +110,11 @@ function filterCourse(course, el) {
   renderTasks();
 }
 
-// ===========================
-// Completed Toggle
-// ===========================
 function toggleCompleted() {
   completedOpen = !completedOpen;
   document.getElementById('completed-list').style.display = completedOpen ? 'block' : 'none';
   document.getElementById('comp-arrow').textContent = completedOpen ? '▲' : '▼';
 }
-
-// ===========================
-// Page Navigation
-// ===========================
-
 
 function showDetail(id) {
   var t = tasks.find(function(x) { return x.id === id; });
@@ -139,11 +122,8 @@ function showDetail(id) {
 
   document.getElementById('d-title').textContent  = t.name;
   document.getElementById('d-course').textContent = t.course;
-  //document.getElementById('d-desc').textContent   = t.desc;
-
-  container = document.getElementById('d-desc')
-  container.textContent   = ""
-  container.innerHTML = "";
+  
+  var container = document.getElementById('d-desc');
   container.innerHTML = t.desc;
 
   var due = document.getElementById('d-due');
@@ -168,37 +148,7 @@ function showList() {
 }
 
 // ===========================
-// Logout
-// ===========================
-async function logout() {
-  try {
-    const response = await fetch(`${APP.CONFIG.BACKEND_API_URL}/logout`, {
-        method: "POST",
-        credentials: "include"
-    });
-
-    if (response.ok) {
-        // 1. ล้างข้อมูลใน Browser
-        sessionStorage.clear();
-        
-        // 2. ส่งกลับหน้า Login
-        window.location.replace("index.html");
-    } else {
-        console.error("Logout failed");
-    }
-  } catch (err) {
-      console.error("Error during logout:", err);
-      // ถึง Error ก็ควรล้างฝั่ง Client และเด้งออกเพื่อความปลอดภัย
-      sessionStorage.clear();
-      window.location.replace("index.html");
-  }
-
-  // sessionStorage.removeItem('isLoggedIn');
-  // window.location.href = 'login.html';
-}
-
-// ===========================
-// LINE Popup
+// Popup Functions
 // ===========================
 function openLinePopup() {
   document.getElementById('line-overlay').classList.add('open');
@@ -211,25 +161,59 @@ function closeLinePopup() {
 }
 
 // ===========================
-// Init
+// Auth & Logout
 // ===========================
+async function logout() {
+  try {
+    const response = await fetch(`${APP.CONFIG.BACKEND_API_URL}/logout`, {
+        method: "POST",
+        credentials: "include"
+    });
 
+    if (response.ok) {
+        sessionStorage.clear();
+        window.location.replace("index.html");
+    } else {
+        console.error("Logout failed");
+    }
+  } catch (err) {
+      console.error("Error during logout:", err);
+      sessionStorage.clear();
+      window.location.replace("index.html");
+  }
+}
+
+// ===========================
+// Init (Combined)
+// ===========================
 document.addEventListener("DOMContentLoaded", async () => {
-  const user = JSON.parse(sessionStorage.getItem("user"));
+  // 1. Check Auth
+  if (sessionStorage.getItem('isLoggedIn') !== 'true') {
+    window.location.replace('index.html');
+    return;
+  }
 
-  console.log(user)
+  // 2. Load User Data
+  const userStr = sessionStorage.getItem("user");
+  if (userStr) {
+    try {
+      const userData = JSON.parse(userStr);
+      // แสดงชื่อใน Topbar
+      if (userData.display_name) {
+        const names = userData.display_name.trim().split(/\s+/);
+        document.getElementById("display-firstname").textContent = names[0] || userData.username;
+        document.getElementById("display-lastname").textContent = names[1] || "";
+      }
+      // อัปเดต username/รหัสนักศึกษา (ถ้ามี)
+      const usernameSpan = document.querySelector(".topbar-name span");
+      if (usernameSpan) usernameSpan.textContent = userData.username || "--";
+      
+    } catch (e) {
+      console.error("User data error", e);
+    }
+  }
 
-  document.querySelector(".topbar-name strong").textContent = user?.display_name || "Guest";
-  document.querySelector(".topbar-name span").textContent = user?.username || "--";
-})
-
-
-// document.addEventListener("DOMContentLoaded", async () => {
-//   renderCourses()
-//   renderTasks();
-
-// })
-// window.addEventListener("tasksLoaded", () => {
-//   // คำนวณ stats จาก tasks array จริงๆ (ไม่ hardcode)
-//   renderTasks();
-// });
+  // 3. Initial Render
+  if (typeof courses !== 'undefined') renderCourses();
+  if (typeof tasks !== 'undefined') renderTasks();
+});

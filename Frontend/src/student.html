@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>5 เมฆ — Task Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app">
+
+  <div class="sidebar">
+    <div class="sidebar-brand">
+      <div class="sidebar-brand-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+      </div>
+      <span class="sidebar-brand-text">5 เมฆา</span>
+    </div>
+    <div class="sidebar-courses-list">
+      <div class="sidebar-section">วิชาของฉัน</div>
+      <div class="sbi active" onclick="filterCourse('all', this)"><div class="sbi-dot"></div>All Task</div>
+    </div>
+
+    <div class="sidebar-spacer"></div>
+    <div class="sidebar-logout">
+      <div class="logout-btn" onclick="logout()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+          <polyline points="16 17 21 12 16 7"/>
+          <line x1="21" y1="12" x2="9" y2="12"/>
+        </svg>
+        log out
+      </div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="topbar">
+      <span class="topbar-title" id="topbar-title">All Task assignment</span>
+      <div class="topbar-user">
+        <button class="line-btn" onclick="openLinePopup()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63h2.386c.349 0 .63.285.63.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63.349 0 .631.285.631.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.281.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.070 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/>
+          </svg>
+          LINE
+        </button>
+        <div class="topbar-name">
+          <strong id="display-firstname">ชื่อ</strong>
+          <span id="display-lastname">นามสกุล</span>
+        </div>
+        <div class="avatar">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="page active" id="page-list">
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-num done" id="stat-done">0</div>
+            <div class="stat-label">ส่งแล้ว</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num pending" id="stat-pending">0</div>
+            <div class="stat-label">ยังไม่ส่ง</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num late" id="stat-late">0</div>
+            <div class="stat-label">ส่งล่าช้า</div>
+          </div>
+        </div>
+        <div id="task-list"></div>
+        <button class="completed-toggle" onclick="toggleCompleted()">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+            <polyline points="9 11 12 14 22 4"/>
+            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+          </svg>
+          Completed tasks
+          <span id="comp-arrow" style="margin-left: auto;">&#9660;</span>
+        </button>
+        <div id="completed-list" style="display: none;"></div>
+      </div>
+
+      <div class="page" id="page-detail">
+        <button class="back-btn" onclick="showList()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15 18 9 12 15 6"/>
+          </svg>
+          กลับ
+        </button>
+        <div class="detail-card">
+          <div class="detail-title" id="d-title"></div>
+          <div class="detail-meta">
+            <span class="detail-course-badge" id="d-course"></span>
+            <span class="detail-due" id="d-due"></span>
+            <span class="badge" id="d-badge"></span>
+          </div>
+          <div class="detail-desc-label">คำอธิบาย</div>
+          <div class="detail-desc" id="d-desc"></div>
+          <div id="d-assignment-url" class="assignment-url-link-notice readonly-notice">
+            ลิงค์งาน <a href="" target="_blank" rel="noopener noreferrer"></a>
+          </div>
+          <div class="readonly-notice">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="8" x2="12" y2="12"/>
+              <line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+        
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- LINE Popup -->
+    <div class="line-overlay" id="line-overlay" onclick="closeLinePopup()"></div>
+    <div class="line-popup" id="line-popup">
+      <button class="line-popup-close" onclick="closeLinePopup()">✕</button>
+      <div class="line-popup-icon">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="#06C755">
+          <path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63h2.386c.349 0 .63.285.63.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63.349 0 .631.285.631.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.281.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.070 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/>
+        </svg>
+      </div>
+      <div class="line-popup-title">เพิ่มเพื่อนใน LINE</div>
+      <div class="line-popup-desc">เพื่อรับแจ้งเตือนเกี่ยวกับงานที่ส่งจากเรา</div>
+      <a class="line-popup-btn" href="https://line.me/R/ti/p/@570vmhke" target="_blank" rel="noopener">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.070 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/>
+        </svg>
+        เพิ่มเพื่อน LINE
+      </a>
+    </div>
+
+
+<script src="config.js"></script>
+<script src="task.js"></script>
+<script src="script.js"></script>
+
+</body>
+</html>

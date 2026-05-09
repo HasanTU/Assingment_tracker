@@ -16,7 +16,7 @@ def get_assignments():
 
 @assignment_bp.route("/api/sync_assignments", methods=["POST"])
 @token_required
-def sync_assignments():
+def sync_assignments_c():
     student_id = request.current_user
     status = sync_assignments(student_id)
     return jsonify({"status": status}), 200

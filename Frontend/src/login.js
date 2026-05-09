@@ -48,6 +48,18 @@ document.addEventListener("DOMContentLoaded", () => {
             
             
             if (response.ok) {
+                if(data.is_new_user == false) sessionStorage.setItem("moodle_synced", "false");
+                else sessionStorage.setItem("moodle_synced", "true");
+                
+                    const taskRes = await fetch(`${APP.CONFIG.BACKEND_API_URL}/tasks`, {
+                        method: "GET",
+                        headers: { "Content-Type": "application/json" },
+                        credentials: "include"
+                    });
+
+                    const taskJson = await taskRes.json();
+                    sessionStorage.setItem("tasks_cache", JSON.stringify(taskJson.data));
+
                 sessionStorage.setItem('isLoggedIn', 'true');
                 sessionStorage.setItem("user", JSON.stringify({
                     username: data.username,

@@ -27,15 +27,19 @@ def login():
     )
 
 
-    login_moodle(username, password)
+    is_new_user = login_moodle(username, password).get("is_new_user")
+
 
     token    = create_token(result["username"])
     response = make_response(jsonify({
         "message":      "Login สำเร็จ",
         "username":     result["username"],
         "display_name": result["DisplayName"],
+        "is_new_user": is_new_user,
         "token":token
     }), 200)
+
+    
 
     print("Token Created")
 

@@ -49,6 +49,8 @@
     </div>
   </div>
 
+  <!-- Loading -->
+
   <!-- ===========================
        Main Area
        =========================== -->
@@ -103,23 +105,30 @@
          =========================== -->
     <div class="content">
 
+      
+
+
       <!-- หน้า Task List → pages/page-list.html -->
       <div class="page active" id="page-list">
         <div class="stats-row">
           <div class="stat-card">
-            <div class="stat-num done" id="stat-done">23</div>
+            <div class="stat-num done" id="stat-done">-</div>
             <div class="stat-label">ส่งแล้ว</div>
           </div>
           <div class="stat-card">
-            <div class="stat-num pending" id="stat-pending">15</div>
+            <div class="stat-num pending" id="stat-pending">-</div>
             <div class="stat-label">ยังไม่ส่ง</div>
           </div>
           <div class="stat-card">
-            <div class="stat-num late" id="stat-late">3</div>
+            <div class="stat-num late" id="stat-late">-</div>
             <div class="stat-label">ส่งล่าช้า</div>
           </div>
         </div>
         <div id="task-list"></div>
+          <div id="loading" class="loading-overlay">
+        <div class="loading-spinner"></div>
+        </div>
+
         <button class="completed-toggle" onclick="toggleCompleted()">
           <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
             <polyline points="9 11 12 14 22 4"/>
@@ -130,6 +139,7 @@
         </button>
         <div id="completed-list" style="display: none;"></div>
       </div>
+
 
       <!-- หน้า Task Detail → pages/page-detail.html -->
       <div class="page" id="page-detail">
@@ -176,6 +186,7 @@
 
 <script src="config.js"></script>
 <script src="tasks.js"></script>
+<script src="home.js"></script>
 <script src="script.js"></script>
 
 

@@ -1,6 +1,6 @@
 from flask import Flask, jsonify
 from flask_cors import CORS
-from database import init_db
+# from database import init_db
 from config import ALLOWED_ORIGINS
 
 # ─── Import Controllers ────────────────────────────────────
@@ -27,5 +27,5 @@ def health():
 
 
 if __name__ == "__main__":
-    init_db()
+    # init_db()
     app.run(debug=True, port=5000)

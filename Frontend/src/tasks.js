@@ -49,56 +49,111 @@ function mapStatus(status) {
   }
 }
 
-document.addEventListener("DOMContentLoaded", async () => {
-  try {
-    console.log("Starting fetch...");
-    const response = await fetch(`${APP.CONFIG.BACKEND_API_URL}/tasks`, {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-        
-        credentials: "include"
-    });
+function showLoading(show) {
+    const loader = document.getElementById("loading");
+    const completedToggle = document.querySelector(".completed-toggle");
+    const completedList = document.getElementById("completed-list");
 
-    console.log("Response received:", response.status);
-    const jsonData = await response.json()
-    const data = jsonData.data;
-    console.log("Data parsed:", data);
-
-
-    if (response.ok) {
-      tasks = data.map(item => {
-      return {
-        id: item.assignment_id,
-        name: item.title,
-        course: item.course_name,
-        desc: item.description,
-        status: mapStatus(item.status.toUpperCase()), // pending / submitted / graded / overdue
-        due: formatDate(item.deadline),
-        source_url: item.source_url
-      };
-    });
-
-      courses = [...new Set(tasks.map(t => t.course))];
-
+    if (show) {
+        if (loader) loader.classList.add("active");
+        completedToggle.style.display = "none";
+        completedList.style.display = "none";
     } else {
-      console.log("")
+        if (loader) loader.remove();
+        completedToggle.style.display = "flex";
     }
-  } catch (err) {
-      console.error("Fetch Error Detail:", err);
-  }
-  finally{
-    const debug_tasks = tasks.map(t => ({
-      title: t.name,
-      status: t.status
-    }));
+}
 
-    console.log("Debug tasks: ", debug_tasks)
-    renderCourses()
-    renderTasks()
+document.addEventListener("DOMContentLoaded", async () => {
+    showLoading(true); // ✅ แสดง loading ทันที
+    try {
+        let data = null;
+
+        const cached = sessionStorage.getItem("tasks_cache");
+        if (cached) {
+            data = JSON.parse(cached);
+            sessionStorage.removeItem("tasks_cache");
+        } else {
+            const response = await fetch(`${APP.CONFIG.BACKEND_API_URL}/tasks`, {
+                method: "GET",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include"
+            });
+            const jsonData = await response.json();
+            data = jsonData.data;
+        }
+
+        tasks = data.map(item => ({
+            id: item.assignment_id,
+            name: item.title,
+            course: item.course_name,
+            desc: item.description,
+            status: mapStatus(item.status.toUpperCase()),
+            due: formatDate(item.deadline),
+            source_url: item.source_url
+        }));
+
+        courses = [...new Set(tasks.map(t => t.course))];
+
+    } catch (err) {
+        console.error("Fetch Error:", err);
+    } finally {
+        showLoading(false); // ✅ ซ่อน loading แล้ว render
+        renderCourses();
+        renderTasks();
+    }
+});
+
+// document.addEventListener("DOMContentLoaded", async () => {
+//   try {
+//     console.log("Starting fetch...");
+//     const response = await fetch(`${APP.CONFIG.BACKEND_API_URL}/tasks`, {
+//         method: "GET",
+//         headers: { "Content-Type": "application/json" },
+        
+//         credentials: "include"
+//     });
+
+//     console.log("Response received:", response.status);
+//     const jsonData = await response.json()
+//     const data = jsonData.data;
+//     console.log("Data parsed:", data);
+
+
+//     if (response.ok) {
+//       tasks = data.map(item => {
+//       return {
+//         id: item.assignment_id,
+//         name: item.title,
+//         course: item.course_name,
+//         desc: item.description,
+//         status: mapStatus(item.status.toUpperCase()), // pending / submitted / graded / overdue
+//         due: formatDate(item.deadline),
+//         source_url: item.source_url
+//       };
+//     });
+
+//       courses = [...new Set(tasks.map(t => t.course))];
+
+//     } else {
+//       console.log("")
+//     }
+//   } catch (err) {
+//       console.error("Fetch Error Detail:", err);
+//   }
+//   finally{
+//     const debug_tasks = tasks.map(t => ({
+//       title: t.name,
+//       status: t.status
+//     }));
+
+//     console.log("Debug tasks: ", debug_tasks)
+//     renderCourses()
+//     renderTasks()
     
-    //window.dispatchEvent(new Event("tasksLoaded"));
-  }
-})
+//     //window.dispatchEvent(new Event("tasksLoaded"));
+//   }
+// })
 
 
 // var statsByAll = tasks.reduce(function(acc, t) {

@@ -2,24 +2,24 @@ from database import get_conn, row_to_dict
 
 
 # repositories/user_repository.py
-def save_user(student_id, username=None, display_name=None):
+def save_user(student_id, username=None, display_name=None, line_user_id=None):
     conn = get_conn()
     cursor = conn.cursor()
     try:
-        # SQLite ใช้ ON CONFLICT → MSSQL ใช้ MERGE แทน (UPSERT)
         cursor.execute("""
             MERGE INTO users AS target
-            USING (VALUES (?, ?, ?)) AS source (student_id, username, display_name)
+            USING (VALUES (?, ?, ?, ?)) AS source (student_id, username, display_name, line_user_id)
                 ON target.student_id = source.student_id
             WHEN MATCHED THEN
                 UPDATE SET
                     username     = source.username,
                     display_name = source.display_name,
+                    line_user_id = COALESCE(source.line_user_id, target.line_user_id),
                     last_login   = GETDATE()
             WHEN NOT MATCHED THEN
-                INSERT (student_id, username, display_name, last_login)
-                VALUES (source.student_id, source.username, source.display_name, GETDATE());
-        """, (student_id, username, display_name))
+                INSERT (student_id, username, display_name, line_user_id, last_login)
+                VALUES (source.student_id, source.username, source.display_name, source.line_user_id, GETDATE());
+        """, (student_id, username, display_name, line_user_id))
         conn.commit()
         return True
     except Exception as e:
@@ -28,7 +28,6 @@ def save_user(student_id, username=None, display_name=None):
         return False
     finally:
         conn.close()
-
 
 def link_line_user(student_id, line_user_id):
     conn = get_conn()
@@ -48,7 +47,6 @@ def link_line_user(student_id, line_user_id):
         return False
     finally:
         conn.close()
-
 
 def save_moodle_user_id(student_id, moodle_user_id):
     conn = get_conn()

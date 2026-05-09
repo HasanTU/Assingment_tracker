@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         sessionStorage.setItem("moodle_synced", "true");
 
 
-      const response = await fetch(`${APP.CONFIG.BACKEND_API_URL}/sync_assignments`, {
+      const response = await fetch(`${APP.CONFIG.BACKEND_API_URL}/api/sync_assignments`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include"

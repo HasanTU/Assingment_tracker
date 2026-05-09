@@ -29,6 +29,7 @@ MOODLE_API_URL_GET = os.getenv("MOODLE_API_URL_GET", "https://courses.cs.tu.ac.t
 MOODLE_VIEW_URL = os.getenv("MOODLE_VIEW_URL", "https://courses.cs.tu.ac.th/mod/assign/view.php?id=") 
 # ─── CORS ─────────────────────────────────────────────────
 ALLOWED_ORIGINS = [
+    "https://lineliff2.d1gq9s9sgrcxg0.amplifyapp.com",
     "http://127.0.0.1:5500",
     "http://localhost:5500"
 ]

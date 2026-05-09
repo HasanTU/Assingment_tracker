@@ -74,7 +74,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             data = JSON.parse(cached);
             sessionStorage.removeItem("tasks_cache");
         } else {
-            const response = await fetch(`${APP.CONFIG.BACKEND_API_URL}/tasks`, {
+            const response = await fetch(`${APP.CONFIG.BACKEND_API_URL}/api/tasks`, {
                 method: "GET",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include"

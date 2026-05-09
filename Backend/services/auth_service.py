@@ -84,3 +84,9 @@ def token_required(f):
             return jsonify({"error": "Token ไม่ถูกต้อง"}), 401
         return f(*args, **kwargs)
     return decorated
+
+
+def get_app_config():
+    return {
+        "liff_id": os.getenv("LIFF_ID")
+    }

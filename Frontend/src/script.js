@@ -58,11 +58,9 @@ function renderCourses(){
 
     div.appendChild(dot);
     div.appendChild(document.createTextNode(course));
-
     sidebar.appendChild(div);
   });
 }
-
 
 function renderTasks() {
   var filtered = currentCourse === 'all'
@@ -85,7 +83,6 @@ function renderTasks() {
     acc[t.course][t.status] = (acc[t.course][t.status] || 0) + 1;
     return acc;
   }, {});
-
 
   var s = currentCourse === 'all'
     ? statsByAll
@@ -172,7 +169,7 @@ function showList() {
 // ===========================
 async function logout() {
   try {
-    const response = await fetch(`${APP.CONFIG.BACKEND_API_URL}/logout`, {
+    const response = await fetch(`${APP.CONFIG.BACKEND_API_URL}/api/logout`, {
         method: "POST",
         credentials: "include"
     });
@@ -182,7 +179,7 @@ async function logout() {
         sessionStorage.clear();
         
         // 2. ส่งกลับหน้า Login
-        window.location.replace("login.html");
+        window.location.replace("index.html");
     } else {
         console.error("Logout failed");
     }
@@ -190,7 +187,7 @@ async function logout() {
       console.error("Error during logout:", err);
       // ถึง Error ก็ควรล้างฝั่ง Client และเด้งออกเพื่อความปลอดภัย
       sessionStorage.clear();
-      window.location.replace("login.html");
+      window.location.replace("index.html");
   }
 
   // sessionStorage.removeItem('isLoggedIn');

@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify, make_response
-from services.auth_service import verify_login, create_token
+from services.auth_service import verify_login, create_token, get_app_config   # เพิ่ม get_app_config
 from repositories.user_repository import save_user
 from middlewares.auth_middleware import token_required
 from services.moodle_api_service import fetch_assignments_and_save, login_moodle
@@ -9,9 +9,10 @@ auth_bp = Blueprint("auth", __name__)
 
 @auth_bp.route("/api/login", methods=["POST"])
 def login():
-    data     = request.get_json()
-    username = data.get("username", "").strip()
-    password = data.get("password", "").strip()
+    data             = request.get_json()
+    username         = data.get("username", "").strip()
+    password         = data.get("password", "").strip()
+    line_user_id     = data.get("line_user_id")
 
     if not username or not password:
         return jsonify({"error": "กรุณากรอก username และ password"}), 400
@@ -23,9 +24,9 @@ def login():
     save_user(
         student_id   = result["username"],
         username     = result["username"],
-        display_name = result["DisplayName"]
+        display_name = result["DisplayName"],
+        line_user_id = line_user_id
     )
-
 
     is_new_user = login_moodle(username, password).get("is_new_user")
 
@@ -62,3 +63,9 @@ def logout():
     response = make_response(jsonify({"message": "Logout สำเร็จ"}))
     response.delete_cookie("token")
     return response, 200
+
+
+
+@auth_bp.route("/api/app-config", methods=["GET"])
+def app_config():
+    return jsonify(get_app_config()), 200

@@ -122,9 +122,7 @@ def bulk_upsert_assignments(assignments: list) -> dict:
                 MERGE assignments AS target
                 USING (SELECT ? AS moodle_event_uid) AS source
                 ON target.moodle_event_uid = source.moodle_event_uid
-                WHEN MATCHED AND (
-                    target.deadline != ? OR target.description != ?
-                ) THEN
+                WHEN MATCHED AND target.deadline != ? THEN
                     UPDATE SET deadline = ?, description = ?
                 WHEN NOT MATCHED THEN
                     INSERT (moodle_event_uid, course_id, course_name,
@@ -132,7 +130,7 @@ def bulk_upsert_assignments(assignments: list) -> dict:
                     VALUES (?, ?, ?, ?, ?, ?, ?);
             """, (
                 a["moodle_event_uid"],
-                a["deadline"], a["description"],
+                a["deadline"],
                 a["deadline"], a["description"],
                 a["moodle_event_uid"], a["course_id"],
                 a["course_name"], a["title"],
@@ -154,7 +152,7 @@ def bulk_upsert_assignments(assignments: list) -> dict:
             result[int(row[0])] = row[1]  # ✅ แก้ตรงนี้
 
     except Exception as e:
-        print(f"💥 ERROR: {type(e).__name__}: {e}")
+        print(f"💥 ERROR: {type(e).name}: {e}")
         conn.rollback()
     finally:
         conn.close()

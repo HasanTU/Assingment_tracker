@@ -31,7 +31,7 @@ LIFF_ID = os.getenv("LIFF_ID", "")
 
 # ─── CORS ─────────────────────────────────────────────────
 ALLOWED_ORIGINS = [
-    "https://lineliff2.d1gq9s9sgrcxg0.amplifyapp.com",
+    "https://rds-db.dyuf0a8afi0ze.amplifyapp.com/",
     "http://127.0.0.1:5500",
     "http://localhost:5500"
 ]

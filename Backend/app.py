@@ -10,7 +10,9 @@ from controllers.user_task_controller import user_task_bp
 
 
 app = Flask(__name__)
-CORS(app, supports_credentials=True, origins=ALLOWED_ORIGINS)
+CORS(app, supports_credentials=True, origins=ALLOWED_ORIGINS,allow_headers=["Content-Type", "Authorization"],
+    methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+)
 
 app.register_blueprint(auth_bp)
 app.register_blueprint(line_bp)

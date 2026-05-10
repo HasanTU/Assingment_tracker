@@ -9,7 +9,7 @@ def get_all_user_tasks_by_user_id(user_id):
             a.deadline
         FROM user_tasks ut
         JOIN assignments a ON ut.assignment_id = a.assignment_id
-        WHERE ut.user_id = ?
+        WHERE ut.user_id = %s
         ORDER BY a.deadline ASC
     """, (user_id,))
     rows = cursor.fetchall()
@@ -27,8 +27,8 @@ def get_all_user_tasks_by_user_id_and_course_id(user_id, course_id):
             a.deadline
         FROM user_tasks ut
         JOIN assignments a ON ut.assignment_id = a.assignment_id
-        WHERE ut.user_id = ?
-          AND a.course_id = ?
+        WHERE ut.user_id = %s
+          AND a.course_id = %s
         ORDER BY a.deadline ASC
     """, (user_id, course_id))
     rows = cursor.fetchall()
@@ -43,7 +43,7 @@ def get_user_task_by_user_id_and_assignment_id(user_id, assignment_id):
     cursor.execute("""
         SELECT *
         FROM user_tasks
-        WHERE user_id = ? AND assignment_id = ?
+        WHERE user_id = %s AND assignment_id = %s
     """, (user_id, assignment_id))
     row = cursor.fetchone()
     result = row_to_dict(cursor, row)
@@ -66,7 +66,7 @@ def get_all_user_task_and_assignment_info_by_student_id(student_id):
         FROM users u
         JOIN user_tasks  ut ON u.user_id       = ut.user_id
         JOIN assignments a  ON ut.assignment_id = a.assignment_id
-        WHERE u.student_id = ?
+        WHERE u.student_id = %s
         ORDER BY a.deadline ASC
     """, (student_id,))
     rows = cursor.fetchall()
@@ -83,10 +83,10 @@ def save_user_task(user_id, assignment_id, status="pending"):
         cursor.execute("""
             IF NOT EXISTS (
                 SELECT 1 FROM user_tasks
-                WHERE user_id = ? AND assignment_id = ?
+                WHERE user_id = %s AND assignment_id = %s
             )
             INSERT INTO user_tasks (user_id, assignment_id, status)
-            VALUES (?, ?, ?)
+            VALUES (%s, %s, %s)
         """, (user_id, assignment_id,   # สำหรับ NOT EXISTS
               user_id, assignment_id, status))
         conn.commit()
@@ -106,8 +106,8 @@ def update_task_status(user_id, assignment_id, status):
         # datetime('now', 'localtime') → GETDATE()
         cursor.execute("""
             UPDATE user_tasks
-            SET status = ?, last_sync_at = GETDATE()
-            WHERE user_id = ? AND assignment_id = ?
+            SET status = %s, last_sync_at = GETDATE()
+            WHERE user_id = %s AND assignment_id = %s
         """, (status, user_id, assignment_id))
         conn.commit()
         return True
@@ -154,7 +154,7 @@ def mark_as_notified(user_task_id):
     conn = get_conn()
     cursor = conn.cursor()
     cursor.execute(
-        "UPDATE user_tasks SET is_notified = 1 WHERE user_task_id = ?",
+        "UPDATE user_tasks SET is_notified = 1 WHERE user_task_id = %s",
         (user_task_id,)
     )
     conn.commit()

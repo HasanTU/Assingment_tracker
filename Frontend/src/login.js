@@ -64,10 +64,13 @@ document.addEventListener("DOMContentLoaded", async () => {
             const data = await response.json();
 
             if (response.ok) {
+                sessionStorage.setItem("token", data.token)
                 const taskRes = await fetch(`${APP.CONFIG.BACKEND_API_URL}/api/tasks`, {
                     method: "GET",
-                    headers: { "Content-Type": "application/json" },
-                    credentials: "include"
+                    headers: { "Content-Type": "application/json" ,
+                               "Authorization": `Bearer ${data.token}`
+                    },
+                 
                 });
 
                 const taskJson = await taskRes.json();

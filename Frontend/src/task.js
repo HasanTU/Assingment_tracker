@@ -65,7 +65,7 @@ function showLoading(show) {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
-    showLoading(true); // ✅ แสดง loading ทันที
+    showLoading(true);
     try {
         let data = null;
 
@@ -79,8 +79,24 @@ document.addEventListener("DOMContentLoaded", async () => {
                 headers: { "Content-Type": "application/json" },
                 credentials: "include"
             });
+
+            // ✅ เพิ่ม: เช็ค 401 ก่อน .json()
+            if (response.status === 401) {
+                window.location.href = "/login";
+                return;
+            }
+
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
+
             const jsonData = await response.json();
-            data = jsonData.data;
+            data = jsonData.data ?? jsonData; // ✅ fallback ถ้า API ส่ง array ตรงๆ
+        }
+
+        // ✅ เพิ่ม: ป้องกัน crash ถ้า data เป็น null หรือไม่ใช่ array
+        if (!Array.isArray(data)) {
+            throw new Error("Invalid data format");
         }
 
         tasks = data.map(item => ({
@@ -98,12 +114,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     } catch (err) {
         console.error("Fetch Error:", err);
     } finally {
-        showLoading(false); // ✅ ซ่อน loading แล้ว render
+        showLoading(false);
         renderCourses();
         renderTasks();
     }
 });
-
 // document.addEventListener("DOMContentLoaded", async () => {
 //   try {
 //     console.log("Starting fetch...");

@@ -1,5 +1,6 @@
 # sync_handler.py (ประตูหลังบ้านสำหรับ Lambda B)
 
+from services.notification_service import send_notifications
 from services.moodle_api_service import sync_assignments
 # สมมติว่าคุณมีฟังก์ชันดึง user ทั้งหมดใน user_repository (ถ้ายังไม่มีต้องไปเขียนเพิ่มนะครับ)
 from repositories.user_repository import get_all_users 
@@ -41,9 +42,18 @@ def lambda_handler(event, context):
         
         # (ออปชันเสริม: เรียก Notify Service ให้ส่ง LINE ไปบอกแอดมินหรือลงกลุ่มว่า Sync เสร็จแล้ว)
         # send_line_notify(summary)
+        try:
+            print("\n🔔 เริ่มตรวจสอบงานที่ต้องแจ้งเตือน...")
+            send_notifications()
+        except Exception as e:
+            print(f"❌ Notification Job Failed: {str(e)}")
+
+        return "Sync and Notify Complete"
         
         return "Sync Complete"
         
     except Exception as e:
         print(f"❌ System Error (Sync Job Failed): {str(e)}")
         raise e
+    
+    

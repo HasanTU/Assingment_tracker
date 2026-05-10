@@ -1,9 +1,11 @@
-# lambda_function.py (แพ็กใส่ไฟล์ Zip ของ Lambda A and B)
+# lambda_function.py
 
-# นำเข้าตัวแปร app (Flask instance) จากไฟล์ app.py ของคุณ
-from app import app 
+from app import app
 from mangum import Mangum
+from asgiref.wsgi import WsgiToAsgi
 
-# สร้าง handler โดยห่อ Flask app ด้วย Mangum
-# Mangum จะทำหน้าที่แปลง Event จาก API Gateway ให้กลายเป็น Flask Request อัตโนมัติ
-lambda_handler = Mangum(app)
+# 1. แปลง Flask (รุ่นเก๋า) ให้เป็น ASGI (รุ่นใหม่)
+asgi_app = WsgiToAsgi(app)
+
+# 2. ให้ Mangum เข้ามาห่อโค้ดที่แปลงแล้ว 
+lambda_handler = Mangum(asgi_app, lifespan="off")

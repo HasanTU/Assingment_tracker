@@ -8,7 +8,7 @@ def save_user(student_id, username=None, display_name=None, line_user_id=None):
     try:
         cursor.execute("""
             MERGE INTO users AS target
-            USING (VALUES (?, ?, ?, ?)) AS source (student_id, username, display_name, line_user_id)
+            USING (VALUES (%s, %s, %s, %s)) AS source (student_id, username, display_name, line_user_id)
                 ON target.student_id = source.student_id
             WHEN MATCHED THEN
                 UPDATE SET
@@ -35,8 +35,8 @@ def link_line_user(student_id, line_user_id):
     try:
         cursor.execute("""
             UPDATE users
-            SET line_user_id = ?, is_line_notify_active = 1
-            WHERE student_id = ?
+            SET line_user_id = %s, is_line_notify_active = 1
+            WHERE student_id = %s
         """, (line_user_id, student_id))
         updated = cursor.rowcount > 0
         conn.commit()
@@ -53,7 +53,7 @@ def save_moodle_user_id(student_id, moodle_user_id):
     cursor = conn.cursor()
     try:
         cursor.execute(
-            "UPDATE users SET moodle_user_id = ? WHERE student_id = ?",
+            "UPDATE users SET moodle_user_id = %s WHERE student_id = %s",
             (moodle_user_id, student_id)
         )
         conn.commit()
@@ -71,7 +71,7 @@ def save_moodle_api(student_id, moodle_api):
     cursor = conn.cursor()
     try:
         cursor.execute(
-            "UPDATE users SET moodle_API = ? WHERE student_id = ?",
+            "UPDATE users SET moodle_API = %s WHERE student_id = %s",
             (moodle_api, student_id)
         )
         conn.commit()
@@ -88,7 +88,7 @@ def get_moodle_token_by_student_id(student_id):
     conn = get_conn()
     cursor = conn.cursor()
     cursor.execute(
-        "SELECT moodle_API FROM users WHERE student_id = ?", (student_id,)
+        "SELECT moodle_API FROM users WHERE student_id = %s", (student_id,)
     )
     row = cursor.fetchone()
     conn.close()
@@ -99,7 +99,7 @@ def get_moodle_user_id_by_student_id(student_id):
     conn = get_conn()
     cursor = conn.cursor()
     cursor.execute(
-        "SELECT moodle_user_id FROM users WHERE student_id = ?", (student_id,)
+        "SELECT moodle_user_id FROM users WHERE student_id = %s", (student_id,)
     )
     row = cursor.fetchone()
     conn.close()
@@ -110,7 +110,7 @@ def get_user_by_student_id(student_id):
     conn = get_conn()
     cursor = conn.cursor()
     cursor.execute(
-        "SELECT * FROM users WHERE student_id = ?", (student_id,)
+        "SELECT * FROM users WHERE student_id = %s", (student_id,)
     )
     row = cursor.fetchone()
     result = row_to_dict(cursor, row)

@@ -14,12 +14,12 @@ def save_assignment(moodle_event_uid, title, deadline,
         # MSSQL ไม่มี INSERT OR IGNORE → ใช้ IF NOT EXISTS แทน
         cursor.execute("""
             IF NOT EXISTS (
-                SELECT 1 FROM assignments WHERE moodle_event_uid = ?
+                SELECT 1 FROM assignments WHERE moodle_event_uid = %s
             )
             INSERT INTO assignments
                 (moodle_event_uid, course_id, course_name, title,
                  description, source_url, deadline)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
         """, (moodle_event_uid,                          # สำหรับ NOT EXISTS
               moodle_event_uid, course_id, course_name,  # สำหรับ INSERT
               title, description, source_url, deadline))
@@ -29,7 +29,7 @@ def save_assignment(moodle_event_uid, title, deadline,
         print("✅ [DEBUG] Commit สำเร็จ!")
 
         cursor.execute(
-            "SELECT assignment_id FROM assignments WHERE moodle_event_uid = ?",
+            "SELECT assignment_id FROM assignments WHERE moodle_event_uid = %s",
             (moodle_event_uid,)
         )
         row = cursor.fetchone()
@@ -53,12 +53,12 @@ def update_assignment_deadline_and_description(moodle_event_uid, deadline, descr
         # ใช้ OUTPUT clause เพื่อดึง assignment_id หลัง UPDATE ใน statement เดียว
         cursor.execute("""
             UPDATE assignments
-            SET deadline = ?, description = ?
+            SET deadline = %s, description = %s
             OUTPUT INSERTED.assignment_id
-            WHERE moodle_event_uid = ?
+            WHERE moodle_event_uid = %s
               AND (
-                    deadline    IS NULL OR deadline    != ?
-                OR  description IS NULL OR description != ?
+                    deadline    IS NULL OR deadline    != %s
+                OR  description IS NULL OR description != %s
               )
         """, (deadline, description, moodle_event_uid, deadline, description))
 
@@ -78,7 +78,7 @@ def get_assignment_by_moodle_id(id):
     conn = get_conn()
     cursor = conn.cursor()
     cursor.execute(
-        "SELECT * FROM assignments WHERE moodle_event_uid = ?", (id,)
+        "SELECT * FROM assignments WHERE moodle_event_uid = %s", (id,)
     )
     row = cursor.fetchone()
     result = row_to_dict(cursor, row)
@@ -90,7 +90,7 @@ def get_assignment_by_assignment_id(id):
     conn = get_conn()
     cursor = conn.cursor()
     cursor.execute(
-        "SELECT * FROM assignments WHERE assignment_id = ?", (id,)
+        "SELECT * FROM assignments WHERE assignment_id = %s", (id,)
     )
     row = cursor.fetchone()
     result = row_to_dict(cursor, row)
@@ -120,14 +120,14 @@ def bulk_upsert_assignments(assignments: list) -> dict:
         for a in assignments:
             cursor.execute("""
                 MERGE assignments AS target
-                USING (SELECT ? AS moodle_event_uid) AS source
+                USING (SELECT %s AS moodle_event_uid) AS source
                 ON target.moodle_event_uid = source.moodle_event_uid
-                WHEN MATCHED AND target.deadline != ? THEN
-                    UPDATE SET deadline = ?, description = ?
+                WHEN MATCHED AND target.deadline != %s THEN
+                    UPDATE SET deadline = %s, description = %s
                 WHEN NOT MATCHED THEN
                     INSERT (moodle_event_uid, course_id, course_name,
                             title, description, source_url, deadline)
-                    VALUES (?, ?, ?, ?, ?, ?, ?);
+                    VALUES (%s, %s, %s, %s, %s, %s, %s);
             """, (
                 a["moodle_event_uid"],
                 a["deadline"],
@@ -141,7 +141,7 @@ def bulk_upsert_assignments(assignments: list) -> dict:
         print("✅ commit สำเร็จ")
 
         uids = [a["moodle_event_uid"] for a in assignments]
-        placeholders = ",".join(["?"] * len(uids))
+        placeholders = ",".join(["%s"] * len(uids))
         cursor.execute(
             f"SELECT moodle_event_uid, assignment_id FROM assignments WHERE moodle_event_uid IN ({placeholders})",
             uids

@@ -1,51 +1,34 @@
-# import sqlite3
-
+import os
+import pymssql
+from dbutils.pooled_db import PooledDB
 from dotenv import load_dotenv
-load_dotenv()
-
-
 from datetime import datetime
 from typing import Optional
 
-import pyodbc
-from dbutils.pooled_db import PooledDB
+load_dotenv()
+
 import config
 
-CONN_STR = (
-    f"DRIVER={{{config.DB_DRIVER}}};"
-    f"SERVER={config.DB_SERVER};"
-    f"DATABASE={config.DB_NAME};"
-    f"UID={config.DB_USER};"
-    f"PWD={config.DB_PASSWORD};"
-    "TrustServerCertificate=yes;"
-)
-
-
-
-class PyODBCCreator:
-    threadsafety = 1
-    Error = pyodbc.Error
-    OperationalError = pyodbc.OperationalError
-
-    @staticmethod
-    def connect(**kwargs):
-        return pyodbc.connect(CONN_STR)
+# Local → ใช้ค่าจาก config/.env
+# Lambda → ใช้ค่าจาก Environment Variables (os.environ)
+DB_SERVER   = os.environ.get("DB_SERVER",   config.DB_SERVER)
+DB_NAME     = os.environ.get("DB_NAME",     config.DB_NAME)
+DB_USER     = os.environ.get("DB_USER",     config.DB_USER)
+DB_PASSWORD = os.environ.get("DB_PASSWORD", config.DB_PASSWORD)
 
 pool = PooledDB(
-    creator=PyODBCCreator,
+    creator=pymssql,
     maxconnections=10,
     mincached=2,
     blocking=True,
-    setsession=[],
-    ping=1,
-    failures=pyodbc.Error,    
-    threadsafety=1,         
+    host=DB_SERVER,
+    user=DB_USER,
+    password=DB_PASSWORD,
+    database=DB_NAME,
 )
 
 def get_conn():
     return pool.connection()
-
-
 
 def row_to_dict(cursor, row) -> Optional[dict]:
     if row is None:
@@ -53,13 +36,11 @@ def row_to_dict(cursor, row) -> Optional[dict]:
     cols = [col[0] for col in cursor.description]
     result = {}
     for col, val in zip(cols, row):
-        # แปลง datetime object → string ให้เหมือน SQLite เดิม
         if isinstance(val, datetime):
             result[col] = val.strftime("%Y-%m-%d %H:%M:%S")
         else:
             result[col] = val
     return result
-
 # def get_conn():
 #     conn = pyodbc.connect(
 #         f"DRIVER={{{config.DB_DRIVER}}};"

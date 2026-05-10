@@ -8,6 +8,10 @@ def token_required(f):
     """Decorator เช็ค JWT Token ก่อนเข้า route"""
     @wraps(f)
     def decorated(*args, **kwargs):
+   
+        if request.method == "OPTIONS":
+            return jsonify({}), 200
+
         token = request.cookies.get("token")
 
         if not token:

@@ -15,11 +15,6 @@ namespace greenlet {
 
 typedef void (*ThreadStateDestructor)(ThreadState* const);
 
-// Only one of these, auto created per thread as a thread_local.
-// This means we don't have to worry about atomic access to the
-// internals, because by definition all access is happening on a
-// single thread.
-// Constructing the state constructs the MainGreenlet.
 template<ThreadStateDestructor Destructor>
 class ThreadStateCreator
 {
@@ -41,6 +36,8 @@ private:
 
 public:
 
+    // Only one of these, auto created per thread.
+    // Constructing the state constructs the MainGreenlet.
     ThreadStateCreator() :
         _state((ThreadState*)1)
     {

@@ -14,18 +14,11 @@
 
 #include "TGreenlet.hpp"
 
-#ifdef Py_GIL_DISABLED
-#include <atomic>
-#endif
 
-// Incremented when we create a main greenlet, in a new thread, decremented
-// when it is destroyed.
-#ifdef Py_GIL_DISABLED
-static std::atomic<Py_ssize_t> G_TOTAL_MAIN_GREENLETS(0);
-#else
-// Protected by the GIL.
+
+// Protected by the GIL. Incremented when we create a main greenlet,
+// in a new thread, decremented when it is destroyed.
 static Py_ssize_t G_TOTAL_MAIN_GREENLETS;
-#endif
 
 namespace greenlet {
 greenlet::PythonAllocator<MainGreenlet> MainGreenlet::allocator;
@@ -66,8 +59,6 @@ MainGreenlet::thread_state() const noexcept
 void
 MainGreenlet::thread_state(ThreadState* t) noexcept
 {
-    // this method is only used during thread tear down, when it is
-    // called with nullptr, signalling the thread is dead.
     assert(!t);
     this->_thread_state = t;
 }
@@ -120,10 +111,9 @@ MainGreenlet::g_switch()
 int
 MainGreenlet::tp_traverse(visitproc visit, void* arg)
 {
-    ThreadState* thread_state = this->_thread_state.load();
-    if (thread_state) {
+    if (this->_thread_state) {
         // we've already traversed main, (self), don't do it again.
-        int result = thread_state->tp_traverse(visit, arg, false);
+        int result = this->_thread_state->tp_traverse(visit, arg, false);
         if (result) {
             return result;
         }

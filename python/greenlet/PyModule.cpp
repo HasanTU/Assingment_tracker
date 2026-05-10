@@ -17,7 +17,6 @@ using greenlet::ThreadState;
 #    pragma clang diagnostic ignored "-Wunused-variable"
 #endif
 
-
 PyDoc_STRVAR(mod_getcurrent_doc,
              "getcurrent() -> greenlet\n"
              "\n"
@@ -27,9 +26,6 @@ PyDoc_STRVAR(mod_getcurrent_doc,
 static PyObject*
 mod_getcurrent(PyObject* UNUSED(module))
 {
-    if (greenlet::IsShuttingDown()) {
-        Py_RETURN_NONE;
-    }
     return GET_THREAD_STATE().state().get_current().relinquish_ownership_o();
 }
 
@@ -148,7 +144,7 @@ PyDoc_STRVAR(mod_get_clocks_used_doing_optional_cleanup_doc,
 static PyObject*
 mod_get_clocks_used_doing_optional_cleanup(PyObject* UNUSED(module))
 {
-    std::clock_t clocks = ThreadState::clocks_used_doing_gc();
+    std::clock_t& clocks = ThreadState::clocks_used_doing_gc();
 
     if (clocks == std::clock_t(-1)) {
         Py_RETURN_NONE;
@@ -172,15 +168,15 @@ mod_enable_optional_cleanup(PyObject* UNUSED(module), PyObject* flag)
         return nullptr;
     }
 
+    std::clock_t& clocks = ThreadState::clocks_used_doing_gc();
     if (is_true) {
-        std::clock_t clocks = ThreadState::clocks_used_doing_gc();
         // If we already have a value, we don't want to lose it.
         if (clocks == std::clock_t(-1)) {
-            ThreadState::set_clocks_used_doing_gc(0);
+            clocks = 0;
         }
     }
     else {
-        ThreadState::set_clocks_used_doing_gc(std::clock_t(-1));
+        clocks = std::clock_t(-1);
     }
     Py_RETURN_NONE;
 }

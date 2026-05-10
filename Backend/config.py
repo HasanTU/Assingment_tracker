@@ -33,7 +33,8 @@ LIFF_ID = os.getenv("LIFF_ID", "")
 ALLOWED_ORIGINS = [
     "https://rds-db.dyuf0a8afi0ze.amplifyapp.com/",
     "http://127.0.0.1:5500",
-    "http://localhost:5500"
+    "http://localhost:5500",
+    "https://4n15xdiqsb.execute-api.us-east-1.amazonaws.com/ "
 ]
 _extra = os.getenv("ALLOWED_ORIGINS")
 if _extra:
